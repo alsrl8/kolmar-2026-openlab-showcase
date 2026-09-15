@@ -3,6 +3,7 @@
 콜마 2026 OpenLab에서 다루는 업무 자동화 아이디어를 발표와 웹에서 보여주기 위한 공개 쇼케이스입니다.
 
 - 공개 사이트: [alsrl8.github.io/kolmar-2026-openlab-showcase](https://alsrl8.github.io/kolmar-2026-openlab-showcase/)
+- 발표 조작: 화면 클릭, 좌우 방향키, Page Up/Down 또는 Space로 이동하며 영상 슬라이드는 진입 즉시 재생됩니다.
 
 ## 공개 범위
 
