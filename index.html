@@ -17,71 +17,163 @@
       --white: #fff;
     }
     * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; overflow: hidden; }
     body {
       margin: 0;
-      min-height: 100vh;
-      background: radial-gradient(circle at 82% 10%, #e2eaff 0, transparent 30%), linear-gradient(145deg, #fff 0%, var(--paper) 100%);
+      background: var(--paper);
       color: var(--ink);
       font-family: Inter, Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
-    main { width: min(1500px, calc(100% - 48px)); margin: 0 auto; padding: 64px 0 80px; }
-    header { margin-bottom: 38px; }
-    .eyebrow { margin: 0 0 10px; color: var(--blue); font-size: 14px; font-weight: 850; letter-spacing: .12em; }
-    h1 { margin: 0; color: var(--navy); font-size: clamp(42px, 6vw, 78px); line-height: 1; letter-spacing: -.055em; }
-    .intro { max-width: 880px; margin: 22px 0 0; color: var(--muted); font-size: clamp(17px, 2vw, 22px); line-height: 1.6; }
-    article {
+    button, video { font: inherit; }
+    .deck { position: relative; width: 100%; height: 100%; }
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: clamp(28px, 5vw, 84px);
+      background: radial-gradient(circle at 82% 10%, #e2eaff 0, transparent 30%), linear-gradient(145deg, #fff 0%, var(--paper) 100%);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateX(4%);
+      transition: opacity 260ms ease, transform 320ms ease, visibility 0s linear 320ms;
+      pointer-events: none;
+    }
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(0);
+      transition-delay: 0s;
+      pointer-events: auto;
+    }
+    .cover { width: min(1500px, 100%); }
+    .eyebrow { margin: 0 0 16px; color: var(--blue); font-size: clamp(14px, 1.5vw, 22px); font-weight: 900; letter-spacing: .13em; }
+    h1 { margin: 0; color: var(--navy); font-size: clamp(58px, 8vw, 128px); line-height: .96; letter-spacing: -.065em; }
+    .intro { max-width: 920px; margin: 32px 0 0; color: var(--muted); font-size: clamp(20px, 2.2vw, 34px); line-height: 1.55; }
+    .click-hint { margin-top: 64px; color: var(--blue); font-size: clamp(16px, 1.5vw, 22px); font-weight: 850; }
+    .video-slide { padding: clamp(18px, 2.5vw, 42px); }
+    .video-layout { width: min(1760px, 100%); height: 100%; display: grid; place-items: center; }
+    .video-frame {
+      min-height: 0;
+      display: grid;
+      place-items: center;
       overflow: hidden;
       border: 1px solid var(--line);
-      border-radius: 30px;
-      background: rgba(255,255,255,.9);
-      box-shadow: 0 30px 80px rgba(0,0,60,.12);
+      border-radius: clamp(18px, 2vw, 30px);
+      background: #eef2f7;
+      box-shadow: 0 30px 80px rgba(0,0,60,.13);
     }
-    .video-wrap { background: #eef2f7; }
-    video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background: #eef2f7; }
-    .caption { display: flex; gap: 24px; justify-content: space-between; align-items: end; padding: 28px 32px 31px; }
-    .team { margin: 0 0 7px; color: var(--blue); font-size: 14px; font-weight: 850; }
-    h2 { margin: 0; color: var(--navy); font-size: clamp(23px, 3vw, 36px); line-height: 1.2; letter-spacing: -.035em; }
-    .format { flex-shrink: 0; color: var(--muted); font-size: 13px; }
-    footer { margin-top: 26px; color: var(--muted); font-size: 13px; }
-    @media (max-width: 720px) {
-      main { width: min(100% - 28px, 1500px); padding: 34px 0 54px; }
-      header { margin-bottom: 24px; }
-      .caption { display: block; padding: 22px; }
-      .format { margin-top: 14px; }
+    video { display: block; width: 100%; height: 100%; object-fit: contain; background: #eef2f7; }
+    .controls { position: fixed; right: 22px; bottom: 18px; z-index: 10; display: flex; align-items: center; gap: 8px; }
+    .counter { min-width: 50px; color: var(--muted); font-size: 13px; text-align: center; }
+    .nav-button {
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: rgba(255,255,255,.9);
+      color: var(--navy);
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(0,0,60,.08);
+    }
+    .nav-button:disabled { opacity: .3; cursor: default; }
+    .nav-button:focus-visible, video:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+    @media (max-width: 760px) {
+      .video-frame { border-radius: 15px; }
+      .controls { right: 12px; bottom: 10px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .slide { transition: none; }
     }
   </style>
 </head>
 <body>
-  <main>
-    <header>
-      <p class="eyebrow">2026 OPENLAB · AUTOMATION SHOWCASE</p>
-      <h1>업무의 흐름을<br>눈앞에서 움직이게</h1>
-      <p class="intro">팀별 자동화 과제를 짧은 모션 카드로 보여주는 공개 쇼케이스입니다.</p>
-    </header>
-
-    <article>
-      <div class="video-wrap">
-        <video
-          controls
-          muted
-          playsinline
-          preload="metadata"
-          poster="public/posters/03-logistics-card.jpg"
-        >
-          <source src="public/videos/03-logistics-card.mp4" type="video/mp4">
-          이 브라우저에서는 MP4 영상을 재생할 수 없습니다.
-        </video>
+  <main class="deck" id="deck">
+    <section class="slide active" aria-label="표지">
+      <div class="cover">
+        <p class="eyebrow">2026 OPENLAB · AUTOMATION SHOWCASE</p>
+        <h1>업무의 흐름을<br>눈앞에서 움직이게</h1>
+        <p class="intro">팀별 자동화 과제를 짧은 모션 카드로 보여주는 공개 쇼케이스입니다.</p>
+        <p class="click-hint">화면을 클릭해 시작</p>
       </div>
-      <div class="caption">
-        <div>
-          <p class="team">물류팀(부천)</p>
-          <h2>명세서 저장,분류,전달 프로세스 자동화를 통한 업무 효율화</h2>
+    </section>
+
+    <section class="slide video-slide" aria-label="물류팀 자동화 영상">
+      <div class="video-layout">
+        <div class="video-frame">
+          <video muted playsinline preload="auto" poster="public/posters/03-logistics-card.jpg">
+            <source src="public/videos/03-logistics-card.mp4" type="video/mp4">
+            이 브라우저에서는 MP4 영상을 재생할 수 없습니다.
+          </video>
         </div>
-        <div class="format">12초 · 1920×1080 · H.264</div>
       </div>
-    </article>
-
-    <footer>Kolmar 2026 OpenLab Showcase</footer>
+    </section>
   </main>
+
+  <nav class="controls" aria-label="슬라이드 이동">
+    <button class="nav-button" id="previous" type="button" aria-label="이전 슬라이드">←</button>
+    <span class="counter" id="counter" aria-live="polite">1 / 2</span>
+    <button class="nav-button" id="next" type="button" aria-label="다음 슬라이드">→</button>
+  </nav>
+
+  <script>
+    const slides = [...document.querySelectorAll('.slide')];
+    const videos = [...document.querySelectorAll('video')];
+    const previousButton = document.querySelector('#previous');
+    const nextButton = document.querySelector('#next');
+    const counter = document.querySelector('#counter');
+    const deck = document.querySelector('#deck');
+    let currentSlide = 0;
+
+    const showSlide = (index) => {
+      const nextIndex = Math.max(0, Math.min(index, slides.length - 1));
+      currentSlide = nextIndex;
+
+      slides.forEach((slide, slideIndex) => {
+        const isActive = slideIndex === currentSlide;
+        slide.classList.toggle('active', isActive);
+        slide.setAttribute('aria-hidden', String(!isActive));
+      });
+
+      videos.forEach((video) => {
+        const isActive = video.closest('.slide').classList.contains('active');
+        if (isActive) {
+          video.currentTime = 0;
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+          video.currentTime = 0;
+        }
+      });
+
+      previousButton.disabled = currentSlide === 0;
+      nextButton.disabled = currentSlide === slides.length - 1;
+      counter.textContent = `${currentSlide + 1} / ${slides.length}`;
+      history.replaceState(null, '', `#${currentSlide + 1}`);
+    };
+
+    const nextSlide = () => showSlide(currentSlide + 1);
+    const previousSlide = () => showSlide(currentSlide - 1);
+
+    deck.addEventListener('click', (event) => {
+      if (event.target.closest('video, button, a')) return;
+      nextSlide();
+    });
+    nextButton.addEventListener('click', nextSlide);
+    previousButton.addEventListener('click', previousSlide);
+    document.addEventListener('keydown', (event) => {
+      if (['ArrowRight', 'PageDown', 'Enter', ' '].includes(event.key)) {
+        event.preventDefault();
+        nextSlide();
+      }
+      if (['ArrowLeft', 'PageUp', 'Backspace'].includes(event.key)) {
+        event.preventDefault();
+        previousSlide();
+      }
+    });
+
+    const hashIndex = Number.parseInt(location.hash.slice(1), 10) - 1;
+    showSlide(Number.isNaN(hashIndex) ? 0 : hashIndex);
+  </script>
 </body>
 </html>
