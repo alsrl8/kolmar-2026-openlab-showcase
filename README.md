@@ -2,6 +2,8 @@
 
 콜마 2026 OpenLab에서 다루는 업무 자동화 아이디어를 발표와 웹에서 보여주기 위한 공개 쇼케이스입니다.
 
+- 공개 사이트: [alsrl8.github.io/kolmar-2026-openlab-showcase](https://alsrl8.github.io/kolmar-2026-openlab-showcase/)
+
 ## 공개 범위
 
 이 저장소에는 공개 검토를 마친 자료만 둡니다.
@@ -23,5 +25,9 @@ public/videos/       공개 승인된 MP4
 public/posters/      영상별 정적 대표 이미지
 public/assets/       공개 발표용 스타일과 이미지
 ```
+
+## 현재 공개 자료
+
+- 물류팀(부천): 명세서 저장,분류,전달 프로세스 자동화
 
 비공개 작업 저장소에서 공개 가능 여부를 검토한 뒤 필요한 산출물만 이 저장소로 내보냅니다. 이 저장소의 Git 이력만으로 공개 발표를 재현할 수 있어야 합니다.

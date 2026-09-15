@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Kolmar 2026 OpenLab 업무 자동화 영상 쇼케이스">
+  <title>Kolmar 2026 OpenLab Showcase</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --blue: #276ef1;
+      --navy: #00005a;
+      --ink: #182026;
+      --muted: #68727d;
+      --paper: #f3f6fa;
+      --line: #dfe5ed;
+      --white: #fff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at 82% 10%, #e2eaff 0, transparent 30%), linear-gradient(145deg, #fff 0%, var(--paper) 100%);
+      color: var(--ink);
+      font-family: Inter, Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    main { width: min(1500px, calc(100% - 48px)); margin: 0 auto; padding: 64px 0 80px; }
+    header { margin-bottom: 38px; }
+    .eyebrow { margin: 0 0 10px; color: var(--blue); font-size: 14px; font-weight: 850; letter-spacing: .12em; }
+    h1 { margin: 0; color: var(--navy); font-size: clamp(42px, 6vw, 78px); line-height: 1; letter-spacing: -.055em; }
+    .intro { max-width: 880px; margin: 22px 0 0; color: var(--muted); font-size: clamp(17px, 2vw, 22px); line-height: 1.6; }
+    article {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      background: rgba(255,255,255,.9);
+      box-shadow: 0 30px 80px rgba(0,0,60,.12);
+    }
+    .video-wrap { background: #eef2f7; }
+    video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background: #eef2f7; }
+    .caption { display: flex; gap: 24px; justify-content: space-between; align-items: end; padding: 28px 32px 31px; }
+    .team { margin: 0 0 7px; color: var(--blue); font-size: 14px; font-weight: 850; }
+    h2 { margin: 0; color: var(--navy); font-size: clamp(23px, 3vw, 36px); line-height: 1.2; letter-spacing: -.035em; }
+    .format { flex-shrink: 0; color: var(--muted); font-size: 13px; }
+    footer { margin-top: 26px; color: var(--muted); font-size: 13px; }
+    @media (max-width: 720px) {
+      main { width: min(100% - 28px, 1500px); padding: 34px 0 54px; }
+      header { margin-bottom: 24px; }
+      .caption { display: block; padding: 22px; }
+      .format { margin-top: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="eyebrow">2026 OPENLAB · AUTOMATION SHOWCASE</p>
+      <h1>업무의 흐름을<br>눈앞에서 움직이게</h1>
+      <p class="intro">팀별 자동화 과제를 짧은 모션 카드로 보여주는 공개 쇼케이스입니다.</p>
+    </header>
+
+    <article>
+      <div class="video-wrap">
+        <video
+          controls
+          muted
+          playsinline
+          preload="metadata"
+          poster="public/posters/03-logistics-card.jpg"
+        >
+          <source src="public/videos/03-logistics-card.mp4" type="video/mp4">
+          이 브라우저에서는 MP4 영상을 재생할 수 없습니다.
+        </video>
+      </div>
+      <div class="caption">
+        <div>
+          <p class="team">물류팀(부천)</p>
+          <h2>명세서 저장,분류,전달 프로세스 자동화를 통한 업무 효율화</h2>
+        </div>
+        <div class="format">12초 · 1920×1080 · H.264</div>
+      </div>
+    </article>
+
+    <footer>Kolmar 2026 OpenLab Showcase</footer>
+  </main>
+</body>
+</html>
