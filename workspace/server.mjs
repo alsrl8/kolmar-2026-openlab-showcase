@@ -273,7 +273,13 @@ export async function createWorkspaceServer(options = {}) {
             lang: 'ko',
             mode: 'edit',
             user: {id: `team-${file.team}`, name: TEAMS.find((team) => team.id === file.team)?.name || file.team},
-            customization: {compactHeader: true, forcesave: true, help: false, hideRightMenu: true},
+            customization: {
+              compactHeader: true,
+              forcesave: true,
+              help: false,
+              hideRightMenu: true,
+              features: {featuresTips: false},
+            },
           },
         };
         officeConfig.token = createJwt(officeConfig, config.officeJwtSecret);

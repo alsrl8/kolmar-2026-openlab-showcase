@@ -78,6 +78,7 @@ test('one-day file journey, isolation, persistence and cleanup', async (t) => {
   assert.match(editor.editorConfig.callbackUrl, /^http:\/\/caddy:8080\/api\/onlyoffice\/callback\//);
   assert.equal(editor.editorConfig.user.name, '물류팀');
   assert.equal(editor.editorConfig.customization.help, false);
+  assert.equal(editor.editorConfig.customization.features.featuresTips, false);
   assert.equal(editor.token.split('.').length, 3);
 
   const ownList = await fetch(`${app.base}/api/files`, {headers: {cookie: logistics.cookie}});
