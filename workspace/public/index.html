@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="콜마 Open Lab 하루 실습 작업공간">
+  <title>Open Lab 작업공간</title>
+  <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+  <main>
+    <section class="gate" id="gate" hidden>
+      <div class="gate-card">
+        <p class="eyebrow">KOLMAR · OPEN LAB</p>
+        <h1>오늘 쓸 자료를<br>여기서 함께 다뤄요</h1>
+        <p class="lede">파일을 올리고 내용을 확인한 뒤, n8n으로 보내 결과를 받아보세요.</p>
+        <form id="entry-form">
+          <label>내 팀<select id="team" required><option value="">팀을 선택해 주세요</option></select></label>
+          <label>행사 코드<input id="event-code" type="password" autocomplete="current-password" required placeholder="안내받은 코드를 입력해 주세요"></label>
+          <button class="primary" type="submit">작업공간 들어가기</button>
+          <p class="form-error" id="entry-error" role="alert"></p>
+        </form>
+      </div>
+    </section>
+
+    <section class="workspace" id="workspace" hidden>
+      <header>
+        <div>
+          <p class="eyebrow">KOLMAR · OPEN LAB</p>
+          <h1 id="team-title">오늘의 작업공간</h1>
+        </div>
+        <div class="header-actions">
+          <span class="connection"><i></i> 준비됨</span>
+          <button class="quiet" id="leave" type="button">나가기</button>
+        </div>
+      </header>
+
+      <section class="upload-panel" id="drop-zone">
+        <input id="file-input" type="file" multiple hidden>
+        <div class="upload-icon" aria-hidden="true">＋</div>
+        <div>
+          <h2>자료를 여기에 놓아주세요</h2>
+          <p>Excel, PDF, 문서, 이미지 등 원본 그대로 보관됩니다.</p>
+        </div>
+        <button class="secondary" id="choose-files" type="button">파일 선택</button>
+      </section>
+
+      <div class="notice" id="notice" role="status" hidden></div>
+
+      <section class="board">
+        <article class="lane" data-lane="uploaded">
+          <div class="lane-heading"><div><span class="step">1</span><h2>내 자료</h2></div><span class="count">0</span></div>
+          <p>올린 파일을 먼저 열어 확인해요.</p>
+          <div class="cards" id="uploaded-list"></div>
+        </article>
+        <article class="lane" data-lane="queued">
+          <div class="lane-heading"><div><span class="step">2</span><h2>n8n에 전달</h2></div><span class="count">0</span></div>
+          <p>확인한 파일이 자동화를 기다리고 있어요.</p>
+          <div class="cards" id="queued-list"></div>
+        </article>
+        <article class="lane" data-lane="processing">
+          <div class="lane-heading"><div><span class="step">3</span><h2>처리 중</h2></div><span class="count">0</span></div>
+          <p>n8n이 파일을 다루고 있어요.</p>
+          <div class="cards" id="processing-list"></div>
+        </article>
+        <article class="lane result-lane" data-lane="completed">
+          <div class="lane-heading"><div><span class="step">4</span><h2>완료된 결과</h2></div><span class="count">0</span></div>
+          <p>결과를 바로 열거나 내려받을 수 있어요.</p>
+          <div class="cards" id="completed-list"></div>
+        </article>
+      </section>
+    </section>
+  </main>
+
+  <dialog id="preview-dialog">
+    <div class="dialog-head">
+      <div><p class="eyebrow">파일 미리보기</p><h2 id="preview-title"></h2></div>
+      <div class="dialog-actions">
+        <a class="secondary button-link" id="download-link">내려받기</a>
+        <button class="quiet" id="close-preview" type="button">닫기</button>
+      </div>
+    </div>
+    <div class="preview" id="preview"></div>
+  </dialog>
+
+  <template id="file-card-template">
+    <div class="file-card">
+      <button class="file-main" type="button">
+        <span class="file-icon"></span>
+        <span class="file-copy"><strong></strong><small></small></span>
+      </button>
+      <button class="send-button" type="button">n8n으로 보내기</button>
+    </div>
+  </template>
+
+  <script src="/app.js" type="module"></script>
+</body>
+</html>

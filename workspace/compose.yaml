@@ -1,0 +1,54 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      PORT: 3000
+      DATA_DIR: /data
+      ONLYOFFICE_APP_INTERNAL_ORIGIN: http://caddy:8080
+      ONLYOFFICE_SERVER_INTERNAL_ORIGIN: http://onlyoffice
+    volumes:
+      - workspace_data:/data
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  onlyoffice:
+    image: onlyoffice/documentserver:9.1
+    restart: unless-stopped
+    environment:
+      JWT_ENABLED: "true"
+      JWT_SECRET: ${ONLYOFFICE_JWT_SECRET}
+      JWT_HEADER: AuthorizationJwt
+    volumes:
+      - onlyoffice_data:/var/www/onlyoffice/Data
+      - onlyoffice_logs:/var/log/onlyoffice
+
+  caddy:
+    image: caddy:2.10-alpine
+    restart: unless-stopped
+    depends_on:
+      app:
+        condition: service_healthy
+      onlyoffice:
+        condition: service_started
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+
+  tunnel:
+    image: cloudflare/cloudflared:2025.8.1
+    profiles: ["public"]
+    restart: unless-stopped
+    depends_on:
+      - caddy
+    command: tunnel --no-autoupdate --url http://caddy:8080
+
+volumes:
+  workspace_data:
+  onlyoffice_data:
+  onlyoffice_logs:
