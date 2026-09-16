@@ -1,0 +1,49 @@
+{
+  "id": "openlab-save-result",
+  "name": "Open Lab - 공개 Storage에 결과 보내기",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "subworkflow-trigger",
+      "name": "호출 입력",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "={{ $env.OPENLAB_API_ORIGIN + '/api/n8n/results' }}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {"name": "team", "value": "={{ $json.team }}"},
+            {"name": "sourceId", "value": "={{ $json.sourceId }}"},
+            {"name": "name", "value": "={{ $json.resultName }}"}
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {"name": "Authorization", "value": "={{ 'Bearer ' + $env.OPENLAB_N8N_API_KEY }}"}
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {}
+      },
+      "id": "upload-result",
+      "name": "공개 Storage에 보내기",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [240, 0]
+    }
+  ],
+  "connections": {
+    "호출 입력": {"main": [[{"node": "공개 Storage에 보내기", "type": "main", "index": 0}]]}
+  },
+  "settings": {"executionOrder": "v1"},
+  "active": false,
+  "versionId": "bff1b480-8dd9-4f1a-86ba-71f803a6296e"
+}

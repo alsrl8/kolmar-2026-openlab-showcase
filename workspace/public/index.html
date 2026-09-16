@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="콜마 Open Lab 하루 실습 작업공간">
+  <title>Open Lab 작업공간</title>
+  <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+  <main>
+    <section class="gate" id="gate" hidden>
+      <div class="gate-card">
+        <p class="eyebrow">KOLMAR · OPEN LAB</p>
+        <h1>오늘 쓸 자료를<br>여기서 함께 다뤄요</h1>
+        <p class="lede">파일을 올리고 내용을 확인한 뒤, n8n으로 보내 결과를 받아보세요.</p>
+        <form id="entry-form">
+          <label>내 팀<select id="team" required><option value="">팀을 선택해 주세요</option></select></label>
+          <label>행사 코드<input id="event-code" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" required placeholder="안내받은 코드를 입력해 주세요"></label>
+          <button class="primary" type="submit">작업공간 들어가기</button>
+          <p class="form-error" id="entry-error" role="alert"></p>
+        </form>
+      </div>
+    </section>
+
+    <section class="workspace" id="workspace" hidden>
+      <header>
+        <div>
+          <p class="eyebrow">KOLMAR · OPEN LAB</p>
+          <h1 id="team-title">오늘의 작업공간</h1>
+        </div>
+        <div class="header-actions">
+          <span class="connection"><i></i> 준비됨</span>
+          <button class="quiet" id="show-guide" type="button">사용 방법</button>
+          <button class="quiet" id="leave" type="button">나가기</button>
+        </div>
+      </header>
+
+      <section class="upload-panel" id="drop-zone">
+        <input id="file-input" type="file" multiple hidden>
+        <div class="upload-icon" aria-hidden="true">＋</div>
+        <div>
+          <h2>자료를 여기에 놓아주세요</h2>
+          <p>Excel, PDF, 문서, 이미지 등 원본 그대로 보관됩니다.</p>
+        </div>
+        <button class="secondary" id="choose-files" type="button">파일 선택</button>
+      </section>
+
+      <div class="notice" id="notice" role="status" hidden></div>
+
+      <section class="board">
+        <article class="lane" data-lane="uploaded">
+          <div class="lane-heading"><div><span class="step">1</span><h2>내 자료</h2></div><span class="count">0</span></div>
+          <p>올린 파일을 먼저 열어 확인해요.</p>
+          <div class="cards" id="uploaded-list"></div>
+        </article>
+        <article class="lane result-lane" data-lane="completed">
+          <div class="lane-heading"><div><span class="step">2</span><h2>완료된 결과</h2></div><span class="count">0</span></div>
+          <p>결과를 바로 열거나 내려받을 수 있어요.</p>
+          <div class="cards" id="completed-list"></div>
+        </article>
+      </section>
+    </section>
+  </main>
+
+  <dialog id="preview-dialog">
+    <div class="dialog-head">
+      <div><p class="eyebrow">파일 미리보기</p><h2 id="preview-title"></h2></div>
+      <div class="dialog-actions">
+        <a class="secondary button-link" id="download-link">내려받기</a>
+        <button class="quiet" id="close-preview" type="button">닫기</button>
+      </div>
+    </div>
+    <div class="preview" id="preview"></div>
+  </dialog>
+
+  <dialog class="guide-dialog" id="guide-dialog">
+    <div class="dialog-head">
+      <div><p class="eyebrow">모든 팀 공통 안내</p><h2>파일을 올리고 결과를 받아보세요</h2></div>
+      <button class="quiet" id="close-guide" type="button">닫기</button>
+    </div>
+    <div class="guide-content">
+      <section class="guide-intro">
+        <span>1</span>
+        <div><h3>내 자료에 파일 올리기</h3><p>Excel, PDF, 문서, 이미지를 위쪽 영역에 끌어다 놓으세요. 파일 이름을 누르면 내용을 먼저 확인할 수 있어요.</p></div>
+      </section>
+      <section class="guide-intro">
+        <span>2</span>
+        <div><h3>n8n에서 업무 처리하기</h3><p><b>n8n으로 파일 가져오기</b>와 <b>공개 Storage에 결과 보내기</b> 사이에 우리 팀의 처리 단계를 넣어요.</p></div>
+      </section>
+      <figure class="guide-shot">
+        <img src="/guide/n8n-subworkflow.png" alt="n8n으로 파일 가져오기와 공개 Storage에 결과 보내기 사이에 업무 처리 단계를 둔 화면">
+        <figcaption>앞뒤 연결은 준비되어 있어요. 가운데 업무 처리 구간만 편집하면 됩니다.</figcaption>
+      </figure>
+      <section class="download-guide">
+        <div>
+          <p class="eyebrow">마지막 단계</p>
+          <h3>다운로드 받기</h3>
+          <ol>
+            <li><b>완료된 결과</b>에서 `처리결과`가 붙은 파일을 찾습니다.</li>
+            <li><b>다운로드</b>를 누르면 원본 형식 그대로 내 컴퓨터에 저장됩니다.</li>
+            <li>내용을 확인한 뒤 필요 없는 파일만 <b>삭제</b>합니다. 삭제한 파일은 되돌릴 수 없어요.</li>
+          </ol>
+        </div>
+        <figure class="guide-shot compact">
+          <img src="/guide/workspace-result.png" alt="완료된 결과 파일의 다운로드와 삭제 버튼 화면">
+          <figcaption>파일 이름을 누르면 다운로드 전에 내용을 미리 볼 수 있어요.</figcaption>
+        </figure>
+      </section>
+    </div>
+  </dialog>
+
+  <template id="file-card-template">
+    <div class="file-card">
+      <button class="file-main" type="button">
+        <span class="file-icon"></span>
+        <span class="file-copy"><strong></strong><small></small></span>
+      </button>
+      <div class="file-actions">
+        <a class="download-button">다운로드</a>
+        <button class="delete-button" type="button">삭제</button>
+      </div>
+    </div>
+  </template>
+
+  <script src="/app.js" type="module"></script>
+</body>
+</html>

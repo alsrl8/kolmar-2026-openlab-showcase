@@ -1,0 +1,76 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      PORT: 3000
+      DATA_DIR: /data
+      ONLYOFFICE_APP_INTERNAL_ORIGIN: http://caddy:8080
+      ONLYOFFICE_SERVER_INTERNAL_ORIGIN: http://onlyoffice
+    volumes:
+      - workspace_data:/data
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  onlyoffice:
+    image: onlyoffice/documentserver:9.1
+    restart: unless-stopped
+    environment:
+      JWT_ENABLED: "true"
+      JWT_SECRET: ${ONLYOFFICE_JWT_SECRET}
+      JWT_HEADER: AuthorizationJwt
+    volumes:
+      - onlyoffice_data:/var/www/onlyoffice/Data
+      - onlyoffice_logs:/var/log/onlyoffice
+
+  caddy:
+    image: caddy:2.10-alpine
+    restart: unless-stopped
+    depends_on:
+      app:
+        condition: service_healthy
+      onlyoffice:
+        condition: service_started
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+
+  tunnel:
+    image: cloudflare/cloudflared:2025.8.1
+    profiles: ["public"]
+    restart: unless-stopped
+    depends_on:
+      - caddy
+    command: tunnel --no-autoupdate --url http://caddy:8080
+
+  n8n:
+    image: n8nio/n8n:2.16.0
+    profiles: ["automation"]
+    restart: unless-stopped
+    depends_on:
+      app:
+        condition: service_healthy
+    ports:
+      - "5681:5678"
+    environment:
+      N8N_HOST: localhost
+      N8N_PORT: 5678
+      N8N_PROTOCOL: http
+      N8N_SECURE_COOKIE: "false"
+      N8N_BLOCK_ENV_ACCESS_IN_NODE: "false"
+      OPENLAB_API_ORIGIN: http://caddy:8080
+      OPENLAB_N8N_API_KEY: ${N8N_API_KEY}
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ./n8n-workflows:/workflows:ro
+
+volumes:
+  workspace_data:
+  onlyoffice_data:
+  onlyoffice_logs:
+  n8n_data:

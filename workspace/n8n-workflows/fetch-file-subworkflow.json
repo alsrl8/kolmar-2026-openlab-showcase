@@ -1,0 +1,78 @@
+{
+  "id": "openlab-fetch-file",
+  "name": "Open Lab - n8n으로 파일 가져오기",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "subworkflow-trigger",
+      "name": "호출 입력",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ $env.OPENLAB_API_ORIGIN + '/api/n8n/files/' + $json.fileId }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {"name": "Authorization", "value": "={{ 'Bearer ' + $env.OPENLAB_N8N_API_KEY }}"}
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "{\"status\":\"processing\"}",
+        "options": {}
+      },
+      "id": "mark-processing",
+      "name": "처리 중 표시",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 0]
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.OPENLAB_API_ORIGIN + '/api/files/' + $('호출 입력').item.json.fileId + '/content' }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {"name": "Authorization", "value": "={{ 'Bearer ' + $env.OPENLAB_N8N_API_KEY }}"}
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "data"
+            }
+          }
+        }
+      },
+      "id": "download-source",
+      "name": "공개 Storage에서 가져오기",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [440, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map((item) => ({\n  json: {\n    id: $('호출 입력').item.json.fileId,\n    team: $('호출 입력').item.json.team,\n    name: item.binary.data.fileName,\n    mime: item.binary.data.mimeType\n  },\n  binary: item.binary\n}));"
+      },
+      "id": "return-file",
+      "name": "파일과 정보 반환",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [660, 0]
+    }
+  ],
+  "connections": {
+    "호출 입력": {"main": [[{"node": "처리 중 표시", "type": "main", "index": 0}]]},
+    "처리 중 표시": {"main": [[{"node": "공개 Storage에서 가져오기", "type": "main", "index": 0}]]},
+    "공개 Storage에서 가져오기": {"main": [[{"node": "파일과 정보 반환", "type": "main", "index": 0}]]}
+  },
+  "settings": {"executionOrder": "v1"},
+  "active": false,
+  "versionId": "a571c091-e042-4cbc-b382-4ecb42800ad0"
+}

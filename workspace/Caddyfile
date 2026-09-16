@@ -1,0 +1,21 @@
+:8080 {
+	encode zstd gzip
+
+	@onlyofficeVersion path_regexp onlyofficeVersion ^/[0-9]+\.[0-9]+\.[0-9]+-[^/]+/.*
+	handle @onlyofficeVersion {
+		reverse_proxy onlyoffice:80 {
+			header_up X-Forwarded-Proto {http.request.header.X-Forwarded-Proto}
+		}
+	}
+
+	@onlyoffice path /web-apps/* /sdkjs/* /sdkjs-plugins/* /doc/* /cache/* /coauthoring/* /hosting/* /ConvertService.ashx /healthcheck
+	handle @onlyoffice {
+		reverse_proxy onlyoffice:80 {
+			header_up X-Forwarded-Proto {http.request.header.X-Forwarded-Proto}
+		}
+	}
+
+	handle {
+		reverse_proxy app:3000
+	}
+}

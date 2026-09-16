@@ -1,0 +1,14 @@
+{
+  "name": "kolmar-openlab-day-workspace",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "check": "node --check server.mjs && node --check lib/storage.mjs && node --check public/app.js"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
