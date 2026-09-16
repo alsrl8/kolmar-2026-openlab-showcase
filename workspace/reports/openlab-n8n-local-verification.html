@@ -75,7 +75,7 @@
       <h2>검증 결과</h2>
       <div class="summary-grid">
         <div class="stat"><strong>2개</strong><span>재사용 서브워크플로</span></div>
-        <div class="stat"><strong>112,790 B</strong><span>실제 PDF 왕복 크기</span></div>
+        <div class="stat"><strong>36,674 B</strong><span>실제 Excel 왕복 크기</span></div>
         <div class="stat"><strong>일치</strong><span>원본·결과 SHA-256</span></div>
         <div class="stat"><strong>6/6</strong><span>호출 워크플로 성공 노드</span></div>
       </div>
@@ -101,19 +101,19 @@
       <h2>서브워크플로 구성</h2>
       <div class="two-col">
         <article class="card">
-          <h3>Open Lab - 파일 가져오기</h3>
-          <p class="muted">입력으로 받은 파일 하나를 처리 중으로 표시하고 binary로 반환합니다.</p>
+          <h3>Open Lab - n8n으로 파일 가져오기</h3>
+          <p class="muted">공개 Storage의 파일 하나를 처리 중으로 표시하고 binary로 반환합니다.</p>
           <ul><li>입력: <code>team</code>, <code>fileId</code></li><li>출력: 파일 정보 + <code>data</code> binary</li><li>인증과 API 주소는 환경변수에서 처리</li></ul>
         </article>
         <article class="card">
-          <h3>Open Lab - 결과 저장하기</h3>
-          <p class="muted">처리가 끝난 binary를 결과 파일로 올리고 원본과 연결합니다.</p>
+          <h3>Open Lab - 공개 Storage에 결과 보내기</h3>
+          <p class="muted">처리가 끝난 binary를 공개 Storage에 올리고 원본과 연결합니다.</p>
           <ul><li>입력: <code>team</code>, <code>sourceId</code>, <code>resultName</code></li><li>입력 파일: <code>data</code> binary</li><li>출력: 생성된 결과 파일 정보</li></ul>
         </article>
       </div>
       <figure>
         <img src="../report-assets/n8n-subworkflow-full.png" alt="모든 노드가 성공한 n8n 서브워크플로 호출 화면">
-        <figcaption>실제 실행 캡처. `파일 가져오기 호출`과 `결과 저장하기 호출` 사이의 `업무 처리 구간`만 과제에 맞게 변경합니다.</figcaption>
+        <figcaption>실제 실행 구성. 양쪽 파일 전달 서브워크플로 사이의 `업무 처리 구간`만 과제에 맞게 변경합니다.</figcaption>
       </figure>
     </section>
 
@@ -123,10 +123,10 @@
         <table>
           <thead><tr><th>항목</th><th>원본</th><th>결과</th></tr></thead>
           <tbody>
-            <tr><th>파일명</th><td>03-거래명세서-샘플.pdf</td><td>subworkflow-처리결과-03-거래명세서-샘플.pdf</td></tr>
-            <tr><th>파일 ID</th><td><code>26ef90e2…e979</code></td><td><code>fe3d5ba4…971f</code></td></tr>
-            <tr><th>크기</th><td>112,790 bytes</td><td>112,790 bytes</td></tr>
-            <tr><th>SHA-256</th><td colspan="2"><code>a48aa337…0308dcd0</code> <span class="ok">일치</span></td></tr>
+            <tr><th>파일명</th><td>02-시험일정-배정표.xlsx</td><td>subworkflow-처리결과-02-시험일정-배정표.xlsx</td></tr>
+            <tr><th>파일 ID</th><td><code>c94dcb9d…3f74</code></td><td><code>fe6273df…471c</code></td></tr>
+            <tr><th>크기</th><td>36,674 bytes</td><td>36,674 bytes</td></tr>
+            <tr><th>SHA-256</th><td colspan="2"><code>a8f4b979…4d22c7de</code> <span class="ok">일치</span></td></tr>
             <tr><th>연결 상태</th><td>source</td><td class="ok">sourceId로 원본 연결 완료</td></tr>
           </tbody>
         </table>

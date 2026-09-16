@@ -52,7 +52,7 @@
         "options": {"waitForSubWorkflow": true}
       },
       "id": "call-fetch",
-      "name": "파일 가져오기 호출",
+      "name": "n8n으로 파일 가져오기",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.1,
       "position": [660, 0]
@@ -75,7 +75,7 @@
         "options": {"waitForSubWorkflow": true}
       },
       "id": "call-save",
-      "name": "결과 저장하기 호출",
+      "name": "공개 Storage에 결과 보내기",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.1,
       "position": [1100, 0]
@@ -84,9 +84,9 @@
   "connections": {
     "직접 실행": {"main": [[{"node": "물류팀 파일 조회", "type": "main", "index": 0}]]},
     "물류팀 파일 조회": {"main": [[{"node": "실습 파일 선택", "type": "main", "index": 0}]]},
-    "실습 파일 선택": {"main": [[{"node": "파일 가져오기 호출", "type": "main", "index": 0}]]},
-    "파일 가져오기 호출": {"main": [[{"node": "업무 처리 구간", "type": "main", "index": 0}]]},
-    "업무 처리 구간": {"main": [[{"node": "결과 저장하기 호출", "type": "main", "index": 0}]]}
+    "실습 파일 선택": {"main": [[{"node": "n8n으로 파일 가져오기", "type": "main", "index": 0}]]},
+    "n8n으로 파일 가져오기": {"main": [[{"node": "업무 처리 구간", "type": "main", "index": 0}]]},
+    "업무 처리 구간": {"main": [[{"node": "공개 Storage에 결과 보내기", "type": "main", "index": 0}]]}
   },
   "settings": {"executionOrder": "v1"},
   "active": false,

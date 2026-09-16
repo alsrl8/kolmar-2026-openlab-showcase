@@ -89,11 +89,13 @@ docker compose --profile automation exec -T n8n \
 
 워크플로에는 API 키가 저장되지 않습니다. Compose가 `.env`의 `N8N_API_KEY`를 `OPENLAB_N8N_API_KEY` 환경변수로 전달합니다.
 
-### 실습용 서브워크플로
+### 공유용 서브워크플로
 
-- `Open Lab - 파일 가져오기`: `team`, `fileId`를 받아 원본 binary와 파일 정보를 반환합니다.
-- `Open Lab - 결과 저장하기`: 처리된 `data` binary와 `team`, `sourceId`, `resultName`을 받아 결과를 저장합니다.
+- `Open Lab - n8n으로 파일 가져오기`: 공개 Storage의 파일을 `team`, `fileId`로 찾아 원본 binary와 파일 정보를 반환합니다.
+- `Open Lab - 공개 Storage에 결과 보내기`: 처리된 `data` binary와 `team`, `sourceId`, `resultName`을 받아 공개 Storage에 결과를 저장합니다.
 - `Open Lab - 서브워크플로 실습 예시`: 앞뒤 서브워크플로 사이의 `업무 처리 구간`만 참가자가 바꾸는 호출 예시입니다.
+
+두 서브워크플로의 입력·출력 계약과 공유 방법은 [../n8n-workflows/README.md](../n8n-workflows/README.md)에 따로 정리되어 있습니다.
 
 세 워크플로를 함께 가져옵니다.
 

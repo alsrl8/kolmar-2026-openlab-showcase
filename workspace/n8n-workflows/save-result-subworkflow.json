@@ -1,6 +1,6 @@
 {
   "id": "openlab-save-result",
-  "name": "Open Lab - 결과 저장하기",
+  "name": "Open Lab - 공개 Storage에 결과 보내기",
   "nodes": [
     {
       "parameters": {},
@@ -34,14 +34,14 @@
         "options": {}
       },
       "id": "upload-result",
-      "name": "결과 업로드",
+      "name": "공개 Storage에 보내기",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [240, 0]
     }
   ],
   "connections": {
-    "호출 입력": {"main": [[{"node": "결과 업로드", "type": "main", "index": 0}]]}
+    "호출 입력": {"main": [[{"node": "공개 Storage에 보내기", "type": "main", "index": 0}]]}
   },
   "settings": {"executionOrder": "v1"},
   "active": false,

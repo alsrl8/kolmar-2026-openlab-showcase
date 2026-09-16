@@ -54,18 +54,13 @@
           <p>올린 파일을 먼저 열어 확인해요.</p>
           <div class="cards" id="uploaded-list"></div>
         </article>
-        <article class="lane" data-lane="queued">
-          <div class="lane-heading"><div><span class="step">2</span><h2>n8n에 전달</h2></div><span class="count">0</span></div>
-          <p>확인한 파일이 자동화를 기다리고 있어요.</p>
-          <div class="cards" id="queued-list"></div>
-        </article>
         <article class="lane" data-lane="processing">
-          <div class="lane-heading"><div><span class="step">3</span><h2>처리 중</h2></div><span class="count">0</span></div>
-          <p>n8n이 파일을 다루고 있어요.</p>
+          <div class="lane-heading"><div><span class="step">2</span><h2>n8n 처리 중</h2></div><span class="count">0</span></div>
+          <p>전달을 기다리거나 n8n이 다루는 파일이에요.</p>
           <div class="cards" id="processing-list"></div>
         </article>
         <article class="lane result-lane" data-lane="completed">
-          <div class="lane-heading"><div><span class="step">4</span><h2>완료된 결과</h2></div><span class="count">0</span></div>
+          <div class="lane-heading"><div><span class="step">3</span><h2>완료된 결과</h2></div><span class="count">0</span></div>
           <p>결과를 바로 열거나 내려받을 수 있어요.</p>
           <div class="cards" id="completed-list"></div>
         </article>
@@ -96,10 +91,10 @@
       </section>
       <section class="guide-intro">
         <span>2</span>
-        <div><h3>n8n에서 업무 처리하기</h3><p>제공된 <b>파일 가져오기</b>와 <b>결과 저장하기</b> 서브워크플로 사이에 우리 팀의 처리 단계를 넣어요.</p></div>
+        <div><h3>n8n에서 업무 처리하기</h3><p><b>n8n으로 파일 가져오기</b>와 <b>공개 Storage에 결과 보내기</b> 사이에 우리 팀의 처리 단계를 넣어요.</p></div>
       </section>
       <figure class="guide-shot">
-        <img src="/guide/n8n-subworkflow.png" alt="n8n에서 파일 가져오기와 결과 저장하기 사이에 업무 처리 단계를 둔 화면">
+        <img src="/guide/n8n-subworkflow.png" alt="n8n으로 파일 가져오기와 공개 Storage에 결과 보내기 사이에 업무 처리 단계를 둔 화면">
         <figcaption>앞뒤 연결은 준비되어 있어요. 가운데 업무 처리 구간만 편집하면 됩니다.</figcaption>
       </figure>
       <section class="download-guide">

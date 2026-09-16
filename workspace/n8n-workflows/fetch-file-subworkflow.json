@@ -1,6 +1,6 @@
 {
   "id": "openlab-fetch-file",
-  "name": "Open Lab - 파일 가져오기",
+  "name": "Open Lab - n8n으로 파일 가져오기",
   "nodes": [
     {
       "parameters": {},
@@ -51,7 +51,7 @@
         }
       },
       "id": "download-source",
-      "name": "원본 다운로드",
+      "name": "공개 Storage에서 가져오기",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [440, 0]
@@ -69,8 +69,8 @@
   ],
   "connections": {
     "호출 입력": {"main": [[{"node": "처리 중 표시", "type": "main", "index": 0}]]},
-    "처리 중 표시": {"main": [[{"node": "원본 다운로드", "type": "main", "index": 0}]]},
-    "원본 다운로드": {"main": [[{"node": "파일과 정보 반환", "type": "main", "index": 0}]]}
+    "처리 중 표시": {"main": [[{"node": "공개 Storage에서 가져오기", "type": "main", "index": 0}]]},
+    "공개 Storage에서 가져오기": {"main": [[{"node": "파일과 정보 반환", "type": "main", "index": 0}]]}
   },
   "settings": {"executionOrder": "v1"},
   "active": false,
