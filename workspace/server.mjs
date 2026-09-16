@@ -8,6 +8,7 @@ import {WorkspaceStorage} from './lib/storage.mjs';
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC_ROOT = path.join(ROOT, 'public');
 const WORKFLOW_ROOT = path.join(ROOT, 'n8n-workflows');
+const DEFAULT_MINDMAPS = JSON.parse(await readFile(path.join(ROOT, 'team-mindmaps.json'), 'utf8'));
 const SHARED_WORKFLOWS = new Set([
   'fetch-file-subworkflow.json',
   'save-result-subworkflow.json',
@@ -100,6 +101,72 @@ const equalSecret = (actual, expected) => {
   return left.length === right.length && timingSafeEqual(left, right);
 };
 
+const mindmapText = (value, maximum, label) => {
+  const text = String(value ?? '').trim();
+  if (!text || text.length > maximum) {
+    const error = new Error(`${label}은 1자 이상 ${maximum}자 이하여야 합니다.`);
+    error.status = 422;
+    throw error;
+  }
+  return text;
+};
+
+const mindmapId = (value, label) => {
+  const id = String(value ?? '');
+  if (!/^[A-Za-z0-9_-]{1,80}$/.test(id)) {
+    const error = new Error(`${label} ID 형식을 확인해 주세요.`);
+    error.status = 422;
+    throw error;
+  }
+  return id;
+};
+
+const validatedMindmap = (value) => {
+  if (!value || typeof value !== 'object' || !Array.isArray(value.branches) || value.branches.length < 1 || value.branches.length > 6) {
+    const error = new Error('마인드맵 구조를 확인해 주세요.');
+    error.status = 422;
+    throw error;
+  }
+  const branchIds = new Set();
+  const itemIds = new Set();
+  return {
+    title: mindmapText(value.title, 120, '과제명'),
+    subtitle: mindmapText(value.subtitle, 240, '과제 설명'),
+    branches: value.branches.map((branch) => {
+      const id = mindmapId(branch.id, '가지');
+      if (branchIds.has(id)) {
+        const error = new Error('가지 ID가 중복되었습니다.');
+        error.status = 422;
+        throw error;
+      }
+      branchIds.add(id);
+      if (!Array.isArray(branch.items) || branch.items.length < 1 || branch.items.length > 12) {
+        const error = new Error('가지마다 1개 이상 12개 이하의 항목이 필요합니다.');
+        error.status = 422;
+        throw error;
+      }
+      return {
+        id,
+        title: mindmapText(branch.title, 80, '가지 제목'),
+        items: branch.items.map((item) => {
+          const itemId = mindmapId(item.id, '항목');
+          if (itemIds.has(itemId)) {
+            const error = new Error('항목 ID가 중복되었습니다.');
+            error.status = 422;
+            throw error;
+          }
+          itemIds.add(itemId);
+          return {
+            id: itemId,
+            text: mindmapText(item.text, 240, '항목'),
+            checked: item.checked === true,
+          };
+        }),
+      };
+    }),
+  };
+};
+
 const createSigner = (secret) => {
   const sign = (value) => createHmac('sha256', secret).update(value).digest('base64url');
   return {
@@ -154,6 +221,7 @@ export async function createWorkspaceServer(options = {}) {
     officeAppInternalOrigin: options.officeAppInternalOrigin ?? process.env.ONLYOFFICE_APP_INTERNAL_ORIGIN,
     officeServerInternalOrigin: options.officeServerInternalOrigin ?? process.env.ONLYOFFICE_SERVER_INTERNAL_ORIGIN,
     workflowRoot: options.workflowRoot ?? WORKFLOW_ROOT,
+    mindmapDefaults: options.mindmapDefaults ?? DEFAULT_MINDMAPS,
   };
   const missing = ['eventCode', 'n8nApiKey', 'adminKey', 'sessionSecret'].filter((key) => !config[key]);
   if (missing.length) throw new Error(`필수 환경변수가 없습니다: ${missing.join(', ')}`);
@@ -198,6 +266,22 @@ export async function createWorkspaceServer(options = {}) {
         const session = sessionFor(request);
         if (!session) return json(response, 401, {error: '입장이 필요합니다.'});
         return json(response, 200, {team: session.team, teams: TEAMS, officeEnabled: config.officeEnabled});
+      }
+
+      if (route === '/api/mindmap' && request.method === 'GET') {
+        const session = sessionFor(request);
+        if (!session) return json(response, 401, {error: '입장이 필요합니다.'});
+        const defaultMap = config.mindmapDefaults[session.team];
+        if (!defaultMap) return json(response, 404, {error: '팀 과제를 찾을 수 없습니다.'});
+        return json(response, 200, {mindmap: await storage.getMindmap(session.team, defaultMap)});
+      }
+
+      if (route === '/api/mindmap' && request.method === 'PUT') {
+        const session = sessionFor(request);
+        if (!session) return json(response, 401, {error: '입장이 필요합니다.'});
+        const body = JSON.parse((await readBody(request, 64 * 1024)).toString() || '{}');
+        const mindmap = validatedMindmap(body.mindmap);
+        return json(response, 200, {mindmap: await storage.saveMindmap(session.team, mindmap)});
       }
 
       if (route === '/api/files' && request.method === 'GET') {

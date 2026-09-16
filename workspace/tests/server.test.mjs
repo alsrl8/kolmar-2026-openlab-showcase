@@ -62,6 +62,28 @@ test('one-day file journey, isolation, persistence and cleanup', async (t) => {
   assert.ok(logistics.cookie);
   const scaleup = await login(app.base, 'scaleup');
 
+  const logisticsMindmap = await fetch(`${app.base}/api/mindmap`, {headers: {cookie: logistics.cookie}});
+  assert.equal(logisticsMindmap.status, 200);
+  const editedMindmap = (await logisticsMindmap.json()).mindmap;
+  assert.match(editedMindmap.title, /명세서/);
+  editedMindmap.branches[0].items[0].checked = true;
+  editedMindmap.branches[0].items[0].text = '교육 중 확인한 항목';
+  const savedMindmap = await fetch(`${app.base}/api/mindmap`, {
+    method: 'PUT',
+    headers: {cookie: logistics.cookie, 'content-type': 'application/json'},
+    body: JSON.stringify({mindmap: editedMindmap}),
+  });
+  assert.equal(savedMindmap.status, 200);
+  assert.equal((await savedMindmap.json()).mindmap.branches[0].items[0].checked, true);
+  const scaleupMindmap = await fetch(`${app.base}/api/mindmap`, {headers: {cookie: scaleup.cookie}});
+  assert.match((await scaleupMindmap.json()).mindmap.title, /신제품/);
+  const invalidMindmap = await fetch(`${app.base}/api/mindmap`, {
+    method: 'PUT',
+    headers: {cookie: logistics.cookie, 'content-type': 'application/json'},
+    body: JSON.stringify({mindmap: {...editedMindmap, title: ''}}),
+  });
+  assert.equal(invalidMindmap.status, 422);
+
   const deniedWorkflow = await fetch(`${app.base}/api/workflows/fetch-file-subworkflow.json`);
   assert.equal(deniedWorkflow.status, 401);
   const sharedWorkflow = await fetch(`${app.base}/api/workflows/fetch-file-subworkflow.json`, {headers: {cookie: logistics.cookie}});
@@ -138,6 +160,10 @@ test('one-day file journey, isolation, persistence and cleanup', async (t) => {
   await stop(app.server);
   app = await listen(dataDir);
   const relogin = await login(app.base, 'logistics');
+  const persistedMindmap = await fetch(`${app.base}/api/mindmap`, {headers: {cookie: relogin.cookie}});
+  const persistedMap = (await persistedMindmap.json()).mindmap;
+  assert.equal(persistedMap.branches[0].items[0].checked, true);
+  assert.equal(persistedMap.branches[0].items[0].text, '교육 중 확인한 항목');
   const persisted = await fetch(`${app.base}/api/files`, {headers: {cookie: relogin.cookie}});
   const persistedFiles = (await persisted.json()).files;
   assert.equal(persistedFiles.length, 2);

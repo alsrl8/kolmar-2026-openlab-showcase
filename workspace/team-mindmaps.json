@@ -1,0 +1,199 @@
+{
+  "logistics": {
+    "title": "명세서 저장·분류·전달 자동화",
+    "subtitle": "출고 후 거래명세서를 담당자에게 전달하고 이력을 남기는 흐름",
+    "branches": [
+      {
+        "id": "prepare",
+        "title": "파일 준비",
+        "items": [
+          {"id": "save-spec", "text": "출고 완료 후 명세서를 작업공간에 올린다", "checked": false},
+          {"id": "read-customer", "text": "명세서에서 고객사명을 확인한다", "checked": false}
+        ]
+      },
+      {
+        "id": "route",
+        "title": "담당자 매칭·전달",
+        "items": [
+          {"id": "match-pm", "text": "고객사와 영업PM 매칭 기준을 정한다", "checked": false},
+          {"id": "choose-channel", "text": "메일 또는 Teams 전달 방식을 정한다", "checked": false},
+          {"id": "verify-recipient", "text": "테스트 수신자와 최종 수신자를 확인한다", "checked": false}
+        ]
+      },
+      {
+        "id": "record",
+        "title": "이력·보관",
+        "items": [
+          {"id": "delivery-log", "text": "전달 여부·시각·담당자를 기록한다", "checked": false},
+          {"id": "archive-order", "text": "전달한 명세서를 날짜 순서로 보관한다", "checked": false},
+          {"id": "mapping-owner", "text": "고객사–영업PM 목록의 관리자를 정한다", "checked": false}
+        ]
+      }
+    ]
+  },
+  "scaleup": {
+    "title": "신제품 개발 단계별 알림 자동화",
+    "subtitle": "진행표의 상태와 기한 변화를 읽고 필요한 시점에 알려주는 흐름",
+    "branches": [
+      {
+        "id": "compare",
+        "title": "진행표 확인",
+        "items": [
+          {"id": "load-sheet", "text": "담당자가 입력한 신제품 진행표를 준비한다", "checked": false},
+          {"id": "compare-state", "text": "이전 파일과 단계·기한·완료 상태를 비교한다", "checked": false},
+          {"id": "find-change", "text": "변경된 항목과 변경 전·후 값을 찾는다", "checked": false}
+        ]
+      },
+      {
+        "id": "notify",
+        "title": "기한 알림",
+        "items": [
+          {"id": "d30", "text": "완료 예정일 D-30 알림을 만든다", "checked": false},
+          {"id": "d7", "text": "D-7 재알림을 만든다", "checked": false},
+          {"id": "d1", "text": "D-1 최종 알림을 만든다", "checked": false}
+        ]
+      },
+      {
+        "id": "progress",
+        "title": "진행률·확인사항",
+        "items": [
+          {"id": "progress-status", "text": "단계별 대기·진행·완료 상태를 표시한다", "checked": false},
+          {"id": "sheet-location", "text": "실제 진행표를 읽고 저장할 위치를 정한다", "checked": false},
+          {"id": "notification-target", "text": "알림 수신자와 테스트 채널을 정한다", "checked": false}
+        ]
+      }
+    ]
+  },
+  "quality-assurance": {
+    "title": "원료명·시험규격 변경관리 자동화",
+    "subtitle": "요청 접수부터 중복 확인, 등록 진행, 변경 이력 반영까지 관리하는 흐름",
+    "branches": [
+      {
+        "id": "request",
+        "title": "요청 접수",
+        "items": [
+          {"id": "form", "text": "자재코드와 시험규격 요청사항을 접수한다", "checked": false},
+          {"id": "lists", "text": "접수 정보를 요청 목록에 등록한다", "checked": false},
+          {"id": "duplicate", "text": "동일 일자·동일 자재코드 중복을 확인한다", "checked": false}
+        ]
+      },
+      {
+        "id": "registration",
+        "title": "등록 진행",
+        "items": [
+          {"id": "notify-owner", "text": "신규 요청을 담당자에게 알린다", "checked": false},
+          {"id": "update-status", "text": "시험규격 등록 진행 상태를 갱신한다", "checked": false},
+          {"id": "notify-complete", "text": "완료 상태가 되면 요청자에게 안내한다", "checked": false}
+        ]
+      },
+      {
+        "id": "material-name",
+        "title": "원료명 변경 이력",
+        "items": [
+          {"id": "prepare-exports", "text": "제조 이력과 표준서 완료 목록 추출 파일을 준비한다", "checked": false},
+          {"id": "deduplicate-bulk", "text": "벌크코드를 기준으로 중복값을 정리한다", "checked": false},
+          {"id": "update-history", "text": "원료명 변경 이력에 새 결과를 반영한다", "checked": false}
+        ]
+      }
+    ]
+  },
+  "quality-control-2": {
+    "title": "분석 리스트 작성·누락 방지",
+    "subtitle": "생산 기록과 도착 샘플을 대조하고 시험 대상을 규칙에 따라 선정하는 흐름",
+    "branches": [
+      {
+        "id": "sample-check",
+        "title": "샘플 대조",
+        "items": [
+          {"id": "prepare-lists", "text": "공장별 결산 리스트와 외주 샘플 리스트를 준비한다", "checked": false},
+          {"id": "check-arrival", "text": "생산 목록과 실제 도착 샘플을 대조한다", "checked": false},
+          {"id": "find-duplicate", "text": "중복 품목과 중복 로트를 확인한다", "checked": false}
+        ]
+      },
+      {
+        "id": "rules",
+        "title": "시험 대상 분류",
+        "items": [
+          {"id": "collect-rules", "text": "제품 정보·시험 규칙·과거 시험 이력을 모은다", "checked": false},
+          {"id": "classify", "text": "담당자가 정한 규칙으로 대상·제외를 분류한다", "checked": false},
+          {"id": "reason", "text": "시험 항목과 선정 이유를 결과에 표시한다", "checked": false}
+        ]
+      },
+      {
+        "id": "review",
+        "title": "검토할 기준",
+        "items": [
+          {"id": "source-location", "text": "제품·고객사·시험 이력의 실제 출처를 확인한다", "checked": false},
+          {"id": "stable-id", "text": "이름 대신 일관된 제품·고객사 ID 사용 여부를 확인한다", "checked": false},
+          {"id": "approval", "text": "최종 분석 대상을 승인할 담당자를 정한다", "checked": false}
+        ]
+      }
+    ]
+  },
+  "quality-control-4-retest": {
+    "title": "미생물 시험·재시험 스마트 관리",
+    "subtitle": "시험표를 하나로 모으고 검출부터 재시험 결과와 공유까지 추적하는 흐름",
+    "branches": [
+      {
+        "id": "combine",
+        "title": "시험표 통합",
+        "items": [
+          {"id": "upload-three", "text": "OTC·MCR·HBL 시험 리스트 3종을 준비한다", "checked": false},
+          {"id": "normalize", "text": "세 목록을 같은 열 구조로 취합한다", "checked": false},
+          {"id": "decision-date", "text": "시험일 기준으로 판정일을 계산한다", "checked": false}
+        ]
+      },
+      {
+        "id": "retest",
+        "title": "검출·재시험",
+        "items": [
+          {"id": "search-item", "text": "시험일자 또는 시험번호로 품목을 찾는다", "checked": false},
+          {"id": "mark-detection", "text": "검출 상태와 재시험 판정일을 기록한다", "checked": false},
+          {"id": "update-result", "text": "재시험 결과를 적합 또는 부적합으로 갱신한다", "checked": false}
+        ]
+      },
+      {
+        "id": "share",
+        "title": "공유·확인사항",
+        "items": [
+          {"id": "detection-mail", "text": "검출 품목 알림 메일 양식을 확인한다", "checked": false},
+          {"id": "retest-mail", "text": "재시험 결과별 메일 문구를 확인한다", "checked": false},
+          {"id": "teams-answer", "text": "Teams 문의에 공유할 판정일 기준을 정한다", "checked": false}
+        ]
+      }
+    ]
+  },
+  "quality-control-4-automation": {
+    "title": "미생물 이미지·사용일지 자동화",
+    "subtitle": "시험 이미지 분류와 배지사용일지 계산·검산을 연결하는 흐름",
+    "branches": [
+      {
+        "id": "image",
+        "title": "시험 이미지 처리",
+        "items": [
+          {"id": "upload-image", "text": "시험결과 이미지를 작업공간에 올린다", "checked": false},
+          {"id": "read-image", "text": "시험명·시료명·시험일 인식 결과를 확인한다", "checked": false},
+          {"id": "rename", "text": "시험 정보 기준으로 파일명을 정리한다", "checked": false}
+        ]
+      },
+      {
+        "id": "organize",
+        "title": "분류·알림",
+        "items": [
+          {"id": "date-folder", "text": "시험일에 맞는 날짜 폴더를 확인한다", "checked": false},
+          {"id": "move-file", "text": "파일을 날짜별 위치로 분류한다", "checked": false},
+          {"id": "notify-complete", "text": "처리 경로와 완료 상태를 담당자에게 알린다", "checked": false}
+        ]
+      },
+      {
+        "id": "media-log",
+        "title": "배지사용일지·검산",
+        "items": [
+          {"id": "usage-input", "text": "입고량·조제량·사용량·시험일을 준비한다", "checked": false},
+          {"id": "calculate-balance", "text": "배지별 잔여량을 계산해 사용일지에 기록한다", "checked": false},
+          {"id": "detect-error", "text": "누락·중복·계산 오류·이상 수량을 확인한다", "checked": false}
+        ]
+      }
+    ]
+  }
+}

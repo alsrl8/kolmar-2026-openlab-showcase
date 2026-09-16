@@ -89,6 +89,19 @@ export class WorkspaceStorage {
     return readFile(path.join(this.filesRoot, file.team, file.storedName));
   }
 
+  async getMindmap(team, defaultMap) {
+    const data = await this.#readMetadata();
+    return structuredClone(data.mindmaps?.[team] ?? defaultMap);
+  }
+
+  async saveMindmap(team, mindmap) {
+    return this.#mutate(async (data) => {
+      data.mindmaps ??= {};
+      data.mindmaps[team] = structuredClone(mindmap);
+      return structuredClone(data.mindmaps[team]);
+    });
+  }
+
   async clear() {
     return this.#mutate(async (data) => {
       await rm(this.filesRoot, {recursive: true, force: true});

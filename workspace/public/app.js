@@ -21,8 +21,16 @@ const preview = document.querySelector('#preview');
 const previewTitle = document.querySelector('#preview-title');
 const downloadLink = document.querySelector('#download-link');
 const guideDialog = document.querySelector('#guide-dialog');
+const mindmapElement = document.querySelector('#mindmap');
+const editMindmapButton = document.querySelector('#edit-mindmap');
+const saveMindmapButton = document.querySelector('#save-mindmap');
+const cancelMindmapButton = document.querySelector('#cancel-mindmap');
 let session = null;
 let files = [];
+let mindmap = null;
+let mindmapSnapshot = null;
+let mindmapEditing = false;
+let mindmapSaveChain = Promise.resolve();
 let refreshTimer = null;
 
 teams.forEach(([id, name]) => teamSelect.add(new Option(name, id)));
@@ -82,6 +90,146 @@ const render = () => {
   });
 };
 
+const editable = (element, role) => {
+  element.dataset.role = role;
+  element.contentEditable = mindmapEditing ? 'true' : 'false';
+  element.spellcheck = false;
+  return element;
+};
+
+const mindmapItem = (item, branch) => {
+  const row = document.createElement('label');
+  row.className = 'mindmap-item';
+  row.dataset.id = item.id;
+  const checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
+  checkbox.checked = item.checked;
+  checkbox.addEventListener('change', () => {
+    mindmap = collectMindmap();
+    queueMindmapSave('체크 상태를 저장했어요.');
+  });
+  const text = editable(document.createElement('span'), 'item-text');
+  text.textContent = item.text;
+  const remove = document.createElement('button');
+  remove.className = 'mindmap-delete';
+  remove.type = 'button';
+  remove.setAttribute('aria-label', '항목 삭제');
+  remove.textContent = '×';
+  remove.addEventListener('click', (event) => {
+    event.preventDefault();
+    if (branch.items.length <= 1) return showNotice('가지에는 항목이 하나 이상 필요해요.');
+    branch.items = branch.items.filter((candidate) => candidate.id !== item.id);
+    renderMindmap();
+  });
+  row.append(checkbox, text, remove);
+  return row;
+};
+
+const renderMindmap = () => {
+  if (!mindmap) return;
+  const root = document.createElement('div');
+  root.className = 'mindmap-root';
+  const title = editable(document.createElement('h3'), 'title');
+  title.textContent = mindmap.title;
+  const subtitle = editable(document.createElement('p'), 'subtitle');
+  subtitle.textContent = mindmap.subtitle;
+  root.append(title, subtitle);
+
+  const branches = document.createElement('div');
+  branches.className = 'mindmap-branches';
+  mindmap.branches.forEach((branch) => {
+    const article = document.createElement('article');
+    article.className = 'mindmap-branch';
+    article.dataset.id = branch.id;
+    const heading = editable(document.createElement('h4'), 'branch-title');
+    heading.textContent = branch.title;
+    const items = document.createElement('div');
+    items.className = 'mindmap-items';
+    items.replaceChildren(...branch.items.map((item) => mindmapItem(item, branch)));
+    const add = document.createElement('button');
+    add.className = 'mindmap-add';
+    add.type = 'button';
+    add.textContent = '＋ 항목 추가';
+    add.addEventListener('click', () => {
+      if (branch.items.length >= 12) return showNotice('한 가지에는 항목을 12개까지 추가할 수 있어요.');
+      mindmap = collectMindmap();
+      const target = mindmap.branches.find((candidate) => candidate.id === branch.id);
+      target.items.push({id: `item_${crypto.randomUUID().replaceAll('-', '')}`, text: '새 확인 항목', checked: false});
+      renderMindmap();
+    });
+    article.append(heading, items, add);
+    branches.append(article);
+  });
+  mindmapElement.classList.toggle('editing', mindmapEditing);
+  mindmapElement.replaceChildren(root, branches);
+};
+
+const collectMindmap = () => ({
+  title: mindmapElement.querySelector('[data-role="title"]').textContent.trim(),
+  subtitle: mindmapElement.querySelector('[data-role="subtitle"]').textContent.trim(),
+  branches: [...mindmapElement.querySelectorAll('.mindmap-branch')].map((branch) => ({
+    id: branch.dataset.id,
+    title: branch.querySelector('[data-role="branch-title"]').textContent.trim(),
+    items: [...branch.querySelectorAll('.mindmap-item')].map((item) => ({
+      id: item.dataset.id,
+      text: item.querySelector('[data-role="item-text"]').textContent.trim(),
+      checked: item.querySelector('input').checked,
+    })),
+  })),
+});
+
+const persistMindmap = async (message) => {
+  const data = await request('/api/mindmap', {
+    method: 'PUT',
+    headers: {'content-type': 'application/json'},
+    body: JSON.stringify({mindmap}),
+  });
+  mindmap = data.mindmap;
+  if (message) showNotice(message);
+};
+
+const queueMindmapSave = (message) => {
+  mindmapSaveChain = mindmapSaveChain.then(() => persistMindmap(message)).catch((error) => showNotice(error.message));
+  return mindmapSaveChain;
+};
+
+const loadMindmap = async () => {
+  mindmap = (await request('/api/mindmap')).mindmap;
+  renderMindmap();
+};
+
+editMindmapButton.addEventListener('click', () => {
+  mindmapSnapshot = structuredClone(mindmap);
+  mindmapEditing = true;
+  editMindmapButton.hidden = true;
+  saveMindmapButton.hidden = false;
+  cancelMindmapButton.hidden = false;
+  renderMindmap();
+});
+
+saveMindmapButton.addEventListener('click', async () => {
+  try {
+    mindmap = collectMindmap();
+    await persistMindmap('마인드맵을 저장했어요.');
+    mindmapEditing = false;
+    editMindmapButton.hidden = false;
+    saveMindmapButton.hidden = true;
+    cancelMindmapButton.hidden = true;
+    renderMindmap();
+  } catch (error) {
+    showNotice(error.message);
+  }
+});
+
+cancelMindmapButton.addEventListener('click', () => {
+  mindmap = mindmapSnapshot;
+  mindmapEditing = false;
+  editMindmapButton.hidden = false;
+  saveMindmapButton.hidden = true;
+  cancelMindmapButton.hidden = true;
+  renderMindmap();
+});
+
 const fileCard = (file) => {
   const card = document.querySelector('#file-card-template').content.firstElementChild.cloneNode(true);
   card.querySelector('.file-icon').textContent = fileLabel(file);
@@ -108,7 +256,7 @@ const enter = async () => {
     gate.hidden = true;
     workspace.hidden = false;
     document.querySelector('#team-title').textContent = `${teamNames[session.team]} 작업공간`;
-    await loadFiles();
+    await Promise.all([loadFiles(), loadMindmap()]);
     clearInterval(refreshTimer);
     refreshTimer = setInterval(() => loadFiles().catch(() => {}), 4000);
   } catch {

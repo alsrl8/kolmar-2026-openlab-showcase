@@ -36,6 +36,11 @@
         </div>
       </header>
 
+      <aside class="public-warning" role="alert">
+        <strong>주의 · 공개 저장소입니다</strong>
+        <span>회사 내부 데이터와 개인정보는 올리지 마세요. 필요한 내용은 반드시 마스킹하거나 제외해 주세요.</span>
+      </aside>
+
       <section class="upload-panel" id="drop-zone">
         <input id="file-input" type="file" multiple hidden>
         <div class="upload-icon" aria-hidden="true">＋</div>
@@ -69,6 +74,22 @@
       </section>
 
       <div class="notice" id="notice" role="status" hidden></div>
+
+      <section class="mindmap-panel" aria-labelledby="mindmap-section-title">
+        <div class="mindmap-heading">
+          <div>
+            <p class="eyebrow">우리 팀 과제 체크</p>
+            <h2 id="mindmap-section-title">업무 마인드맵</h2>
+          </div>
+          <div class="mindmap-actions">
+            <button class="secondary" id="edit-mindmap" type="button">내용 편집</button>
+            <button class="primary" id="save-mindmap" type="button" hidden>저장</button>
+            <button class="quiet" id="cancel-mindmap" type="button" hidden>취소</button>
+          </div>
+        </div>
+        <p class="mindmap-help">확인한 항목을 체크하세요. 문구를 바꾸거나 항목을 추가한 뒤 저장할 수도 있어요.</p>
+        <div class="mindmap" id="mindmap" aria-live="polite"></div>
+      </section>
 
       <section class="board">
         <article class="lane" data-lane="uploaded">
