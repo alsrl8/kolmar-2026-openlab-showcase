@@ -48,6 +48,26 @@ docker compose logs -f tunnel
 
 로그에 표시되는 `https://...trycloudflare.com` 주소가 참가자 주소입니다. Quick Tunnel 주소는 프로세스를 다시 시작하면 바뀔 수 있고, 호스트가 실행 중일 때만 접근됩니다.
 
+## Mac 이동과 자동 복구
+
+교육용 Mac에서 아래 스크립트를 한 번 실행하면 사용자 로그인 후 Open Lab이 자동으로 시작됩니다.
+
+```bash
+./scripts/install-macos-service.sh
+```
+
+설치된 LaunchAgent는 Docker Desktop을 시작하고, Compose 서비스를 복구하며, 절전을 방지합니다. 네트워크 이동이나 재부팅으로 Quick Tunnel 주소가 바뀌면 `~/projects/alsrl8.github.io`의 `pages` 브랜치를 갱신해 참가자 주소 `https://alsrl8.github.io`가 새 터널을 가리키게 합니다. GitHub Pages 반영에는 잠시 시간이 걸릴 수 있습니다.
+
+Mac 덮개를 닫으면 macOS가 잠들 수 있으며 그동안 접속은 중단됩니다. 덮개를 다시 열어 로그인하면 LaunchAgent가 서비스를 복구합니다. FileVault가 활성화된 재부팅 직후에는 사용자가 로그인하기 전까지 Docker Desktop과 사용자 LaunchAgent가 시작되지 않습니다.
+
+행사가 끝나면 아래 명령 하나로 자동 시작과 절전 방지를 제거하고 컨테이너를 종료합니다.
+
+```bash
+./scripts/uninstall-macos-service.sh
+```
+
+기본 해제는 업로드 파일과 ONLYOFFICE 데이터가 들어 있는 Docker 볼륨을 보존합니다.
+
 ## 종료와 보관
 
 메타데이터를 먼저 내려받습니다.
