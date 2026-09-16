@@ -74,3 +74,17 @@ Content-Type: application/json
 5. 비식별 또는 승인된 파일만 사용
 
 로컬 API 테스트는 고객 n8n 서버에서의 연결 성공을 증명하지 않습니다.
+
+## 로컬 n8n 왕복 재현
+
+저장소에 포함된 `Open Lab - 로컬 파일 왕복 확인` 워크플로는 물류팀의 첫 업로드 파일을 내려받고, 같은 바이너리를 `n8n-처리결과-<원본명>`으로 다시 올립니다. 파일 변환 전 연결 경로 자체를 검증하기 위한 워크플로입니다.
+
+```sh
+docker compose --profile automation up -d n8n
+docker compose --profile automation exec -T n8n \
+  n8n import:workflow --input=/workflows/local-file-roundtrip.json
+```
+
+`http://localhost:5681`에서 초기 관리자 계정을 만든 뒤 `Open Lab - 로컬 파일 왕복 확인`을 열어 직접 실행합니다. 실습 작업공간에는 물류팀 파일이 하나 이상 업로드되어 있어야 합니다. `5681`은 다른 로컬 n8n과 충돌하지 않도록 분리한 포트입니다.
+
+워크플로에는 API 키가 저장되지 않습니다. Compose가 `.env`의 `N8N_API_KEY`를 `OPENLAB_N8N_API_KEY` 환경변수로 전달합니다.

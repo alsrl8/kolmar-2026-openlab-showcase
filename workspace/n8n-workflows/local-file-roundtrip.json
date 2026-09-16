@@ -1,0 +1,133 @@
+{
+  "id": "openlab-local-file-roundtrip",
+  "name": "Open Lab - 로컬 파일 왕복 확인",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual-trigger",
+      "name": "직접 실행",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.OPENLAB_API_ORIGIN + '/api/n8n/files' }}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {"name": "team", "value": "logistics"},
+            {"name": "status", "value": "uploaded"}
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {"name": "Authorization", "value": "={{ 'Bearer ' + $env.OPENLAB_N8N_API_KEY }}"}
+          ]
+        },
+        "options": {}
+      },
+      "id": "list-files",
+      "name": "업로드 파일 조회",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const file = $json.files?.find((item) => item.kind === 'original');\nif (!file) throw new Error('물류팀에 처리할 업로드 파일이 없습니다.');\nreturn [{json: file}];"
+      },
+      "id": "select-file",
+      "name": "첫 파일 선택",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [440, 0]
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ $env.OPENLAB_API_ORIGIN + '/api/n8n/files/' + $json.id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {"name": "Authorization", "value": "={{ 'Bearer ' + $env.OPENLAB_N8N_API_KEY }}"}
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "{\"status\":\"processing\"}",
+        "options": {}
+      },
+      "id": "mark-processing",
+      "name": "처리 중 표시",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [660, 0]
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.OPENLAB_API_ORIGIN + '/api/files/' + $('첫 파일 선택').item.json.id + '/content' }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {"name": "Authorization", "value": "={{ 'Bearer ' + $env.OPENLAB_N8N_API_KEY }}"}
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "data"
+            }
+          }
+        }
+      },
+      "id": "download-file",
+      "name": "원본 다운로드",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [880, 0]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "={{ $env.OPENLAB_API_ORIGIN + '/api/n8n/results' }}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {"name": "team", "value": "logistics"},
+            {"name": "sourceId", "value": "={{ $('첫 파일 선택').item.json.id }}"},
+            {"name": "name", "value": "={{ 'n8n-처리결과-' + $('첫 파일 선택').item.json.name }}"}
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {"name": "Authorization", "value": "={{ 'Bearer ' + $env.OPENLAB_N8N_API_KEY }}"}
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {}
+      },
+      "id": "upload-result",
+      "name": "결과 업로드",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1100, 0]
+    }
+  ],
+  "connections": {
+    "직접 실행": {"main": [[{"node": "업로드 파일 조회", "type": "main", "index": 0}]]},
+    "업로드 파일 조회": {"main": [[{"node": "첫 파일 선택", "type": "main", "index": 0}]]},
+    "첫 파일 선택": {"main": [[{"node": "처리 중 표시", "type": "main", "index": 0}]]},
+    "처리 중 표시": {"main": [[{"node": "원본 다운로드", "type": "main", "index": 0}]]},
+    "원본 다운로드": {"main": [[{"node": "결과 업로드", "type": "main", "index": 0}]]}
+  },
+  "settings": {"executionOrder": "v1"},
+  "active": false,
+  "versionId": "1f934f6a-0cd3-4ca5-bf75-ef29b1684e9d"
+}
