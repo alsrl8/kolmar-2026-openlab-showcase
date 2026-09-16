@@ -73,9 +73,10 @@ const fileCard = (file) => {
   const resultText = file.kind === 'result' ? ' · 결과 파일' : '';
   card.querySelector('small').textContent = `${fileSize(file.size)}${resultText}`;
   card.querySelector('.file-main').addEventListener('click', () => openPreview(file));
-  const send = card.querySelector('.send-button');
-  if (file.kind !== 'original' || file.status !== 'uploaded') send.remove();
-  else send.addEventListener('click', () => queueFile(file));
+  const download = card.querySelector('.download-button');
+  download.href = `/api/files/${file.id}/content?download=1`;
+  download.download = file.name;
+  card.querySelector('.delete-button').addEventListener('click', () => deleteFile(file));
   return card;
 };
 
@@ -144,10 +145,10 @@ fileInput.addEventListener('change', () => uploadFiles([...fileInput.files]).cat
 }));
 dropZone.addEventListener('drop', (event) => uploadFiles([...event.dataTransfer.files]).catch((error) => showNotice(error.message)));
 
-const queueFile = async (file) => {
-  if (!confirm(`“${file.name}” 파일을 n8n 자동화에 보낼까요?\n원본 파일은 그대로 보관됩니다.`)) return;
-  await request(`/api/files/${file.id}/queue`, {method: 'POST'});
-  showNotice('n8n이 가져갈 수 있도록 전달함에 넣었어요.');
+const deleteFile = async (file) => {
+  if (!confirm(`“${file.name}” 파일을 삭제할까요?\n삭제한 파일은 되돌릴 수 없어요.`)) return;
+  await request(`/api/files/${file.id}`, {method: 'DELETE'});
+  showNotice('파일을 삭제했어요.');
   await loadFiles();
 };
 

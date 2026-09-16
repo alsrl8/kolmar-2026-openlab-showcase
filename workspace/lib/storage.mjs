@@ -75,6 +75,16 @@ export class WorkspaceStorage {
     });
   }
 
+  async delete(id) {
+    return this.#mutate(async (data) => {
+      const index = data.files.findIndex((candidate) => candidate.id === id);
+      if (index === -1) return null;
+      const [file] = data.files.splice(index, 1);
+      await rm(path.join(this.filesRoot, file.team, file.storedName), {force: true});
+      return file;
+    });
+  }
+
   async content(file) {
     return readFile(path.join(this.filesRoot, file.team, file.storedName));
   }

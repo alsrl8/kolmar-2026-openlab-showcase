@@ -88,6 +88,9 @@ test('one-day file journey, isolation, persistence and cleanup', async (t) => {
   const isolatedContent = await fetch(`${app.base}/api/files/${original.id}/content`, {headers: {cookie: scaleup.cookie}});
   assert.equal(isolatedContent.status, 401);
 
+  const isolatedDelete = await fetch(`${app.base}/api/files/${original.id}`, {method: 'DELETE', headers: {cookie: scaleup.cookie}});
+  assert.equal(isolatedDelete.status, 404);
+
   const queue = await fetch(`${app.base}/api/files/${original.id}/queue`, {method: 'POST', headers: {cookie: logistics.cookie}});
   assert.equal(queue.status, 200);
   assert.equal((await queue.json()).file.status, 'queued');
@@ -130,6 +133,14 @@ test('one-day file journey, isolation, persistence and cleanup', async (t) => {
   const metadata = JSON.parse(await readFile(path.join(dataDir, 'metadata.json'), 'utf8'));
   assert.equal(metadata.files.length, 2);
 
+  const deleted = await fetch(`${app.base}/api/files/${resultFile.id}`, {
+    method: 'DELETE', headers: {cookie: relogin.cookie},
+  });
+  assert.equal(deleted.status, 200);
+  assert.deepEqual(await deleted.json(), {ok: true});
+  const deletedContent = await fetch(`${app.base}/api/files/${resultFile.id}/content`, {headers: {cookie: relogin.cookie}});
+  assert.equal(deletedContent.status, 404);
+
   const deniedCleanup = await fetch(`${app.base}/api/admin/cleanup`, {
     method: 'POST',
     headers: {'content-type': 'application/json', authorization: `Bearer ${settings.adminKey}`},
@@ -141,6 +152,6 @@ test('one-day file journey, isolation, persistence and cleanup', async (t) => {
     headers: {'content-type': 'application/json', authorization: `Bearer ${settings.adminKey}`},
     body: JSON.stringify({confirm: 'DELETE ALL WORKSHOP FILES'}),
   });
-  assert.deepEqual(await cleanup.json(), {removed: 2});
+  assert.deepEqual(await cleanup.json(), {removed: 1});
   await stop(app.server);
 });

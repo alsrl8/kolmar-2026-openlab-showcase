@@ -238,6 +238,16 @@ export async function createWorkspaceServer(options = {}) {
         return response.end(await storage.content(file));
       }
 
+      const deleteMatch = route.match(/^\/api\/files\/([^/]+)$/);
+      if (deleteMatch && request.method === 'DELETE') {
+        const session = sessionFor(request);
+        if (!session) return json(response, 401, {error: '입장이 필요합니다.'});
+        const file = await storage.get(deleteMatch[1]);
+        if (!file || file.team !== session.team) return json(response, 404, {error: '파일을 찾을 수 없습니다.'});
+        await storage.delete(file.id);
+        return json(response, 200, {ok: true});
+      }
+
       const queueMatch = route.match(/^\/api\/files\/([^/]+)\/queue$/);
       if (queueMatch && request.method === 'POST') {
         const session = sessionFor(request);
