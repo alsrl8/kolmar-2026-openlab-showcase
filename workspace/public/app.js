@@ -52,6 +52,20 @@ const fileLabel = (file) => {
   return ext && ext.length < 6 ? ext : 'FILE';
 };
 
+const uploadedAt = (value) => {
+  const parts = Object.fromEntries(new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Seoul',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hourCycle: 'h23',
+  }).formatToParts(new Date(value)).map(({type, value: part}) => [type, part]));
+  return `${parts.year}-${parts.month}-${parts.day} ${parts.hour}:${parts.minute}:${parts.second} KST`;
+};
+
 const laneFor = (file) => {
   if (file.kind === 'result' || file.status === 'completed' || file.status === 'error') return 'completed';
   if (file.status === 'uploaded') return 'uploaded';
@@ -73,7 +87,7 @@ const fileCard = (file) => {
   card.querySelector('.file-icon').textContent = fileLabel(file);
   card.querySelector('strong').textContent = file.name;
   const resultText = file.kind === 'result' ? ' · 결과 파일' : '';
-  card.querySelector('small').textContent = `${fileSize(file.size)}${resultText}`;
+  card.querySelector('small').textContent = `${fileSize(file.size)}${resultText} · 업로드 ${uploadedAt(file.createdAt)}`;
   card.querySelector('.file-main').addEventListener('click', () => openPreview(file));
   const download = card.querySelector('.download-button');
   download.href = `/api/files/${file.id}/content?download=1`;

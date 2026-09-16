@@ -46,6 +46,28 @@
         <button class="secondary" id="choose-files" type="button">파일 선택</button>
       </section>
 
+      <section class="shared-tools" aria-labelledby="shared-tools-title">
+        <div class="shared-tools-heading">
+          <div>
+            <p class="eyebrow">모든 팀 공통</p>
+            <h2 id="shared-tools-title">n8n 서브워크플로</h2>
+          </div>
+          <span>항상 보관돼요</span>
+        </div>
+        <div class="shared-tool-list">
+          <article class="shared-tool-card">
+            <span class="shared-tool-icon" aria-hidden="true">IN</span>
+            <div><strong>n8n으로 파일 가져오기</strong><p>공개 Storage의 파일을 n8n에서 불러와요.</p></div>
+            <a class="download-button" href="/api/workflows/fetch-file-subworkflow.json" download>다운로드</a>
+          </article>
+          <article class="shared-tool-card">
+            <span class="shared-tool-icon" aria-hidden="true">OUT</span>
+            <div><strong>공개 Storage에 결과 보내기</strong><p>처리가 끝난 파일을 완료된 결과에 저장해요.</p></div>
+            <a class="download-button" href="/api/workflows/save-result-subworkflow.json" download>다운로드</a>
+          </article>
+        </div>
+      </section>
+
       <div class="notice" id="notice" role="status" hidden></div>
 
       <section class="board">

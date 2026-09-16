@@ -43,6 +43,16 @@ header h1 { margin: 0; color: var(--navy); font-size: clamp(34px, 4vw, 58px); le
 .upload-panel h2 { margin: 0 0 5px; color: var(--navy); font-size: 20px; }
 .upload-panel p { margin: 0; color: var(--muted); font-size: 14px; }
 .notice { margin-top: 14px; padding: 13px 16px; border-radius: 12px; background: #eaf7f1; color: #087149; font-weight: 750; }
+.shared-tools { margin-top: 18px; padding: 20px; border: 1px solid #cbd8f4; border-radius: 20px; background: #eef4ff; }
+.shared-tools-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.shared-tools-heading .eyebrow { margin-bottom: 4px; }
+.shared-tools-heading h2 { margin: 0; color: var(--navy); font-size: 20px; }
+.shared-tools-heading > span { padding: 7px 11px; border-radius: 999px; background: #fff; color: var(--blue); font-size: 12px; font-weight: 850; }
+.shared-tool-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 16px; }
+.shared-tool-card { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 13px; padding: 15px; border: 1px solid #d5e0f6; border-radius: 16px; background: #fff; box-shadow: 0 6px 18px rgba(25,37,70,.04); }
+.shared-tool-icon { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 13px; background: #e5edff; color: var(--blue); font-size: 11px; font-weight: 950; }
+.shared-tool-card strong { color: var(--navy); font-size: 14px; }
+.shared-tool-card p { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
 .board { display: grid; grid-template-columns: repeat(2, minmax(320px, 1fr)); gap: 16px; margin-top: 24px; align-items: start; }
 .lane { min-height: 430px; padding: 18px; border: 1px solid var(--line); border-radius: 20px; background: rgba(255,255,255,.72); }
 .result-lane { background: #f4f8ff; border-color: #ccdaf7; }
@@ -99,6 +109,9 @@ dialog::backdrop { background: rgba(9,14,39,.56); backdrop-filter: blur(5px); }
   .dialog-head { align-items: flex-start; }
   .dialog-actions { flex-direction: column; align-items: stretch; }
   .download-guide { grid-template-columns: 1fr; padding: 18px; }
+  .shared-tool-list { grid-template-columns: 1fr; }
+  .shared-tool-card { grid-template-columns: auto 1fr; }
+  .shared-tool-card .download-button { grid-column: 1 / -1; }
   .guide-content { padding: 16px; }
 }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }

@@ -7,6 +7,11 @@ import {WorkspaceStorage} from './lib/storage.mjs';
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC_ROOT = path.join(ROOT, 'public');
+const WORKFLOW_ROOT = path.join(ROOT, 'n8n-workflows');
+const SHARED_WORKFLOWS = new Set([
+  'fetch-file-subworkflow.json',
+  'save-result-subworkflow.json',
+]);
 const TEAMS = [
   {id: 'logistics', name: '물류팀'},
   {id: 'scaleup', name: '스케일업팀'},
@@ -148,6 +153,7 @@ export async function createWorkspaceServer(options = {}) {
     officeJwtSecret: options.officeJwtSecret ?? process.env.ONLYOFFICE_JWT_SECRET,
     officeAppInternalOrigin: options.officeAppInternalOrigin ?? process.env.ONLYOFFICE_APP_INTERNAL_ORIGIN,
     officeServerInternalOrigin: options.officeServerInternalOrigin ?? process.env.ONLYOFFICE_SERVER_INTERNAL_ORIGIN,
+    workflowRoot: options.workflowRoot ?? WORKFLOW_ROOT,
   };
   const missing = ['eventCode', 'n8nApiKey', 'adminKey', 'sessionSecret'].filter((key) => !config[key]);
   if (missing.length) throw new Error(`필수 환경변수가 없습니다: ${missing.join(', ')}`);
@@ -221,6 +227,20 @@ export async function createWorkspaceServer(options = {}) {
           bytes: Buffer.from(await upload.arrayBuffer()),
         });
         return json(response, 201, {file: publicFile(file, config.officeEnabled)});
+      }
+
+      const workflowMatch = route.match(/^\/api\/workflows\/([^/]+)$/);
+      if (workflowMatch && request.method === 'GET') {
+        if (!sessionFor(request)) return json(response, 401, {error: '입장이 필요합니다.'});
+        const name = workflowMatch[1];
+        if (!SHARED_WORKFLOWS.has(name)) return json(response, 404, {error: '워크플로를 찾을 수 없습니다.'});
+        const content = await readFile(path.join(config.workflowRoot, name));
+        response.writeHead(200, {
+          'content-type': 'application/json; charset=utf-8',
+          'content-disposition': `attachment; filename="${name}"`,
+          'cache-control': 'private, no-store',
+        });
+        return response.end(content);
       }
 
       const contentMatch = route.match(/^\/api\/files\/([^/]+)\/content$/);

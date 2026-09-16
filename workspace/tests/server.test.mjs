@@ -18,7 +18,11 @@ const settings = {
 };
 
 const listen = async (dataDir) => {
-  const workspace = await createWorkspaceServer({...settings, dataDir});
+  const workspace = await createWorkspaceServer({
+    ...settings,
+    dataDir,
+    workflowRoot: path.join(import.meta.dirname, '..', 'n8n-workflows'),
+  });
   await new Promise((resolve) => workspace.server.listen(0, '127.0.0.1', resolve));
   const address = workspace.server.address();
   return {...workspace, base: `http://127.0.0.1:${address.port}`};
@@ -57,6 +61,15 @@ test('one-day file journey, isolation, persistence and cleanup', async (t) => {
   assert.equal(logistics.response.status, 200);
   assert.ok(logistics.cookie);
   const scaleup = await login(app.base, 'scaleup');
+
+  const deniedWorkflow = await fetch(`${app.base}/api/workflows/fetch-file-subworkflow.json`);
+  assert.equal(deniedWorkflow.status, 401);
+  const sharedWorkflow = await fetch(`${app.base}/api/workflows/fetch-file-subworkflow.json`, {headers: {cookie: logistics.cookie}});
+  assert.equal(sharedWorkflow.status, 200);
+  assert.match(sharedWorkflow.headers.get('content-disposition'), /attachment/);
+  assert.equal((await sharedWorkflow.json()).id, 'openlab-fetch-file');
+  const unknownWorkflow = await fetch(`${app.base}/api/workflows/unknown.json`, {headers: {cookie: logistics.cookie}});
+  assert.equal(unknownWorkflow.status, 404);
 
   const form = new FormData();
   form.append('file', new File(['merged-cell-workbook'], '업무 현황.xlsx', {
