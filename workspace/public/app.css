@@ -43,7 +43,7 @@ header h1 { margin: 0; color: var(--navy); font-size: clamp(34px, 4vw, 58px); le
 .upload-panel h2 { margin: 0 0 5px; color: var(--navy); font-size: 20px; }
 .upload-panel p { margin: 0; color: var(--muted); font-size: 14px; }
 .notice { margin-top: 14px; padding: 13px 16px; border-radius: 12px; background: #eaf7f1; color: #087149; font-weight: 750; }
-.board { display: grid; grid-template-columns: repeat(3, minmax(280px, 1fr)); gap: 16px; margin-top: 24px; align-items: start; }
+.board { display: grid; grid-template-columns: repeat(2, minmax(320px, 1fr)); gap: 16px; margin-top: 24px; align-items: start; }
 .lane { min-height: 430px; padding: 18px; border: 1px solid var(--line); border-radius: 20px; background: rgba(255,255,255,.72); }
 .result-lane { background: #f4f8ff; border-color: #ccdaf7; }
 .lane-heading, .lane-heading > div { display: flex; align-items: center; justify-content: space-between; gap: 10px; }

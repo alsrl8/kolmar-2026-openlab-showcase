@@ -54,12 +54,12 @@ const fileLabel = (file) => {
 
 const laneFor = (file) => {
   if (file.kind === 'result' || file.status === 'completed' || file.status === 'error') return 'completed';
-  if (file.status === 'queued' || file.status === 'processing') return 'processing';
-  return file.status;
+  if (file.status === 'uploaded') return 'uploaded';
+  return null;
 };
 
 const render = () => {
-  const grouped = {uploaded: [], processing: [], completed: []};
+  const grouped = {uploaded: [], completed: []};
   files.forEach((file) => grouped[laneFor(file)]?.push(file));
   Object.entries(grouped).forEach(([lane, laneFiles]) => {
     const container = document.querySelector(`#${lane}-list`);
