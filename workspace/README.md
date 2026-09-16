@@ -111,3 +111,5 @@ docker compose config
 n8n 연결 방법은 [docs/n8n-api.md](docs/n8n-api.md)를 확인하세요.
 
 로컬 n8n 재현 화면은 `docker compose --profile automation up -d n8n` 실행 후 `http://localhost:5681`에서 확인합니다.
+
+실제 파일 왕복과 공통 안내 화면을 정리한 보고서는 [reports/openlab-n8n-local-verification.html](reports/openlab-n8n-local-verification.html)입니다.

@@ -20,6 +20,7 @@ const dialog = document.querySelector('#preview-dialog');
 const preview = document.querySelector('#preview');
 const previewTitle = document.querySelector('#preview-title');
 const downloadLink = document.querySelector('#download-link');
+const guideDialog = document.querySelector('#guide-dialog');
 let session = null;
 let files = [];
 let refreshTimer = null;
@@ -208,5 +209,8 @@ dialog.addEventListener('cancel', () => {
   window.openlabEditor?.destroyEditor?.();
   window.openlabEditor = null;
 });
+
+document.querySelector('#show-guide').addEventListener('click', () => guideDialog.showModal());
+document.querySelector('#close-guide').addEventListener('click', () => guideDialog.close());
 
 enter();

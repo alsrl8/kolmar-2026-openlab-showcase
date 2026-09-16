@@ -88,3 +88,27 @@ docker compose --profile automation exec -T n8n \
 `http://localhost:5681`에서 초기 관리자 계정을 만든 뒤 `Open Lab - 로컬 파일 왕복 확인`을 열어 직접 실행합니다. 실습 작업공간에는 물류팀 파일이 하나 이상 업로드되어 있어야 합니다. `5681`은 다른 로컬 n8n과 충돌하지 않도록 분리한 포트입니다.
 
 워크플로에는 API 키가 저장되지 않습니다. Compose가 `.env`의 `N8N_API_KEY`를 `OPENLAB_N8N_API_KEY` 환경변수로 전달합니다.
+
+### 실습용 서브워크플로
+
+- `Open Lab - 파일 가져오기`: `team`, `fileId`를 받아 원본 binary와 파일 정보를 반환합니다.
+- `Open Lab - 결과 저장하기`: 처리된 `data` binary와 `team`, `sourceId`, `resultName`을 받아 결과를 저장합니다.
+- `Open Lab - 서브워크플로 실습 예시`: 앞뒤 서브워크플로 사이의 `업무 처리 구간`만 참가자가 바꾸는 호출 예시입니다.
+
+세 워크플로를 함께 가져옵니다.
+
+```sh
+for workflow in /workflows/fetch-file-subworkflow.json \
+  /workflows/save-result-subworkflow.json \
+  /workflows/subworkflow-demo-caller.json; do
+  docker compose --profile automation exec -T n8n \
+    n8n import:workflow --input="$workflow"
+done
+
+docker compose --profile automation exec -T n8n \
+  n8n publish:workflow --id=openlab-fetch-file
+docker compose --profile automation exec -T n8n \
+  n8n publish:workflow --id=openlab-save-result
+```
+
+n8n 2.x에서는 다른 워크플로가 호출할 두 서브워크플로를 가져온 뒤 게시해야 합니다. 게시하지 않으면 호출 노드가 `Workflow is not active` 오류를 반환합니다.

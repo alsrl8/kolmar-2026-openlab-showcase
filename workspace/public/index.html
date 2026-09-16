@@ -31,6 +31,7 @@
         </div>
         <div class="header-actions">
           <span class="connection"><i></i> 준비됨</span>
+          <button class="quiet" id="show-guide" type="button">사용 방법</button>
           <button class="quiet" id="leave" type="button">나가기</button>
         </div>
       </header>
@@ -81,6 +82,42 @@
       </div>
     </div>
     <div class="preview" id="preview"></div>
+  </dialog>
+
+  <dialog class="guide-dialog" id="guide-dialog">
+    <div class="dialog-head">
+      <div><p class="eyebrow">모든 팀 공통 안내</p><h2>파일을 올리고 결과를 받아보세요</h2></div>
+      <button class="quiet" id="close-guide" type="button">닫기</button>
+    </div>
+    <div class="guide-content">
+      <section class="guide-intro">
+        <span>1</span>
+        <div><h3>내 자료에 파일 올리기</h3><p>Excel, PDF, 문서, 이미지를 위쪽 영역에 끌어다 놓으세요. 파일 이름을 누르면 내용을 먼저 확인할 수 있어요.</p></div>
+      </section>
+      <section class="guide-intro">
+        <span>2</span>
+        <div><h3>n8n에서 업무 처리하기</h3><p>제공된 <b>파일 가져오기</b>와 <b>결과 저장하기</b> 서브워크플로 사이에 우리 팀의 처리 단계를 넣어요.</p></div>
+      </section>
+      <figure class="guide-shot">
+        <img src="/guide/n8n-subworkflow.png" alt="n8n에서 파일 가져오기와 결과 저장하기 사이에 업무 처리 단계를 둔 화면">
+        <figcaption>앞뒤 연결은 준비되어 있어요. 가운데 업무 처리 구간만 편집하면 됩니다.</figcaption>
+      </figure>
+      <section class="download-guide">
+        <div>
+          <p class="eyebrow">마지막 단계</p>
+          <h3>다운로드 받기</h3>
+          <ol>
+            <li><b>완료된 결과</b>에서 `처리결과`가 붙은 파일을 찾습니다.</li>
+            <li><b>다운로드</b>를 누르면 원본 형식 그대로 내 컴퓨터에 저장됩니다.</li>
+            <li>내용을 확인한 뒤 필요 없는 파일만 <b>삭제</b>합니다. 삭제한 파일은 되돌릴 수 없어요.</li>
+          </ol>
+        </div>
+        <figure class="guide-shot compact">
+          <img src="/guide/workspace-result.png" alt="완료된 결과 파일의 다운로드와 삭제 버튼 화면">
+          <figcaption>파일 이름을 누르면 다운로드 전에 내용을 미리 볼 수 있어요.</figcaption>
+        </figure>
+      </section>
+    </div>
   </dialog>
 
   <template id="file-card-template">

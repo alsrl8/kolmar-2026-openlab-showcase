@@ -1,0 +1,94 @@
+{
+  "id": "openlab-subworkflow-demo",
+  "name": "Open Lab - 서브워크플로 실습 예시",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual-trigger",
+      "name": "직접 실행",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.OPENLAB_API_ORIGIN + '/api/n8n/files' }}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {"name": "team", "value": "logistics"},
+            {"name": "status", "value": "uploaded"}
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {"name": "Authorization", "value": "={{ 'Bearer ' + $env.OPENLAB_N8N_API_KEY }}"}
+          ]
+        },
+        "options": {}
+      },
+      "id": "list-files",
+      "name": "물류팀 파일 조회",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const file = $json.files?.find((item) => item.kind === 'original');\nif (!file) throw new Error('물류팀에 처리할 업로드 파일이 없습니다.');\nreturn [{json: {team: file.team, fileId: file.id}}];"
+      },
+      "id": "select-file",
+      "name": "실습 파일 선택",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [440, 0]
+    },
+    {
+      "parameters": {
+        "source": "database",
+        "workflowId": {"__rl": true, "value": "openlab-fetch-file", "mode": "id"},
+        "mode": "once",
+        "options": {"waitForSubWorkflow": true}
+      },
+      "id": "call-fetch",
+      "name": "파일 가져오기 호출",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.1,
+      "position": [660, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map((item) => ({\n  json: {\n    team: item.json.team,\n    sourceId: item.json.id,\n    resultName: `subworkflow-처리결과-${item.json.name}`\n  },\n  binary: item.binary\n}));"
+      },
+      "id": "business-step",
+      "name": "업무 처리 구간",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [880, 0]
+    },
+    {
+      "parameters": {
+        "source": "database",
+        "workflowId": {"__rl": true, "value": "openlab-save-result", "mode": "id"},
+        "mode": "once",
+        "options": {"waitForSubWorkflow": true}
+      },
+      "id": "call-save",
+      "name": "결과 저장하기 호출",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.1,
+      "position": [1100, 0]
+    }
+  ],
+  "connections": {
+    "직접 실행": {"main": [[{"node": "물류팀 파일 조회", "type": "main", "index": 0}]]},
+    "물류팀 파일 조회": {"main": [[{"node": "실습 파일 선택", "type": "main", "index": 0}]]},
+    "실습 파일 선택": {"main": [[{"node": "파일 가져오기 호출", "type": "main", "index": 0}]]},
+    "파일 가져오기 호출": {"main": [[{"node": "업무 처리 구간", "type": "main", "index": 0}]]},
+    "업무 처리 구간": {"main": [[{"node": "결과 저장하기 호출", "type": "main", "index": 0}]]}
+  },
+  "settings": {"executionOrder": "v1"},
+  "active": false,
+  "versionId": "8a4524bb-6514-48c9-8323-64695cf0cd08"
+}
