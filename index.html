@@ -78,9 +78,64 @@
     }
     .nav-button:disabled { opacity: .3; cursor: default; }
     .nav-button:focus-visible, video:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+    .source-toggle {
+      position: fixed;
+      top: 50%;
+      right: 0;
+      z-index: 20;
+      padding: 16px 11px;
+      border: 0;
+      border-radius: 14px 0 0 14px;
+      background: var(--navy);
+      color: var(--white);
+      font-weight: 850;
+      letter-spacing: .04em;
+      writing-mode: vertical-rl;
+      cursor: pointer;
+      transform: translateY(-50%);
+      box-shadow: 0 12px 30px rgba(0,0,60,.2);
+    }
+    .source-toggle[hidden] { display: none; }
+    .source-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      border: 0;
+      background: rgba(0,0,30,.38);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 180ms ease, visibility 0s linear 180ms;
+    }
+    .source-backdrop.open { opacity: 1; visibility: visible; transition-delay: 0s; }
+    .source-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      z-index: 31;
+      width: min(580px, 92vw);
+      height: 100%;
+      padding: clamp(24px, 4vw, 48px);
+      overflow-y: auto;
+      background: var(--white);
+      box-shadow: -24px 0 64px rgba(0,0,60,.2);
+      transform: translateX(102%);
+      transition: transform 240ms ease;
+    }
+    .source-drawer.open { transform: translateX(0); }
+    .source-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
+    .source-kicker { margin: 0 0 8px; color: var(--blue); font-size: 13px; font-weight: 900; letter-spacing: .12em; }
+    .source-title { margin: 0; color: var(--navy); font-size: clamp(25px, 3vw, 38px); line-height: 1.2; letter-spacing: -.035em; }
+    .source-close { flex: 0 0 auto; width: 42px; height: 42px; border: 1px solid var(--line); border-radius: 50%; background: var(--paper); color: var(--navy); font-size: 24px; cursor: pointer; }
+    .source-section { margin-top: 30px; padding-top: 24px; border-top: 1px solid var(--line); }
+    .source-section h3 { margin: 0 0 10px; color: var(--navy); font-size: 16px; }
+    .source-section p { margin: 0; color: #39434d; font-size: 16px; line-height: 1.75; white-space: pre-line; }
+    .source-footnote { margin: 30px 0 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
     @media (max-width: 760px) {
       .video-frame { border-radius: 15px; }
       .controls { right: 12px; bottom: 10px; }
+      .source-toggle { padding: 13px 9px; font-size: 13px; }
+      .source-drawer { top: auto; bottom: 0; width: 100%; height: min(76vh, 720px); border-radius: 22px 22px 0 0; transform: translateY(102%); }
+      .source-drawer.open { transform: translateY(0); }
     }
     @media (prefers-reduced-motion: reduce) {
       .slide { transition: none; }
@@ -98,21 +153,21 @@
       </div>
     </section>
 
-    <section class="slide video-slide" aria-label="물류팀 1단계"><div class="video-layout"><div class="video-frame"><video muted playsinline preload="auto" poster="public/posters/03-logistics-phase-1.jpg"><source src="public/videos/03-logistics-phase-1.mp4" type="video/mp4"></video></div></div></section>
-    <section class="slide video-slide" aria-label="물류팀 2단계"><div class="video-layout"><div class="video-frame"><video muted playsinline preload="auto" poster="public/posters/03-logistics-phase-2.jpg"><source src="public/videos/03-logistics-phase-2.mp4" type="video/mp4"></video></div></div></section>
-    <section class="slide video-slide" aria-label="스케일업팀 1단계"><div class="video-layout"><div class="video-frame"><video muted playsinline preload="auto" poster="public/posters/06-scaleup-phase-1.jpg"><source src="public/videos/06-scaleup-phase-1.mp4" type="video/mp4"></video></div></div></section>
-    <section class="slide video-slide" aria-label="스케일업팀 2단계"><div class="video-layout"><div class="video-frame"><video muted playsinline preload="auto" poster="public/posters/06-scaleup-phase-2.jpg"><source src="public/videos/06-scaleup-phase-2.mp4" type="video/mp4"></video></div></div></section>
-    <section class="slide video-slide" aria-label="품질보증팀 1단계"><div class="video-layout"><div class="video-frame"><video muted playsinline preload="auto" poster="public/posters/08-quality-assurance-phase-1.jpg"><source src="public/videos/08-quality-assurance-phase-1.mp4" type="video/mp4"></video></div></div></section>
-    <section class="slide video-slide" aria-label="품질보증팀 2단계"><div class="video-layout"><div class="video-frame"><video muted playsinline preload="auto" poster="public/posters/08-quality-assurance-phase-2.jpg"><source src="public/videos/08-quality-assurance-phase-2.mp4" type="video/mp4"></video></div></div></section>
-    <section class="slide video-slide" aria-label="품질보증팀 3단계"><div class="video-layout"><div class="video-frame"><video muted playsinline preload="auto" poster="public/posters/08-quality-assurance-phase-3.jpg"><source src="public/videos/08-quality-assurance-phase-3.mp4" type="video/mp4"></video></div></div></section>
-    <section class="slide video-slide" aria-label="품질관리2팀 1단계"><div class="video-layout"><div class="video-frame"><video muted playsinline preload="auto" poster="public/posters/11-analysis-list-phase-1.jpg"><source src="public/videos/11-analysis-list-phase-1.mp4" type="video/mp4"></video></div></div></section>
-    <section class="slide video-slide" aria-label="품질관리2팀 2단계"><div class="video-layout"><div class="video-frame"><video muted playsinline preload="auto" poster="public/posters/11-analysis-list-phase-2.jpg"><source src="public/videos/11-analysis-list-phase-2.mp4" type="video/mp4"></video></div></div></section>
-    <section class="slide video-slide" aria-label="품질관리4팀 재시험 1단계"><div class="video-layout"><div class="video-frame"><video muted playsinline preload="auto" poster="public/posters/19-microbe-retest-phase-1.jpg"><source src="public/videos/19-microbe-retest-phase-1.mp4" type="video/mp4"></video></div></div></section>
-    <section class="slide video-slide" aria-label="품질관리4팀 재시험 2단계"><div class="video-layout"><div class="video-frame"><video muted playsinline preload="auto" poster="public/posters/19-microbe-retest-phase-2.jpg"><source src="public/videos/19-microbe-retest-phase-2.mp4" type="video/mp4"></video></div></div></section>
-    <section class="slide video-slide" aria-label="품질관리4팀 재시험 3단계"><div class="video-layout"><div class="video-frame"><video muted playsinline preload="auto" poster="public/posters/19-microbe-retest-phase-3.jpg"><source src="public/videos/19-microbe-retest-phase-3.mp4" type="video/mp4"></video></div></div></section>
-    <section class="slide video-slide" aria-label="품질관리4팀 미생물 자동화 1단계"><div class="video-layout"><div class="video-frame"><video muted playsinline preload="auto" poster="public/posters/20-microbe-automation-phase-1.jpg"><source src="public/videos/20-microbe-automation-phase-1.mp4" type="video/mp4"></video></div></div></section>
-    <section class="slide video-slide" aria-label="품질관리4팀 미생물 자동화 2단계"><div class="video-layout"><div class="video-frame"><video muted playsinline preload="auto" poster="public/posters/20-microbe-automation-phase-2.jpg"><source src="public/videos/20-microbe-automation-phase-2.mp4" type="video/mp4"></video></div></div></section>
-    <section class="slide video-slide" aria-label="품질관리4팀 미생물 자동화 3단계"><div class="video-layout"><div class="video-frame"><video muted playsinline preload="auto" poster="public/posters/20-microbe-automation-phase-3.jpg"><source src="public/videos/20-microbe-automation-phase-3.mp4" type="video/mp4"></video></div></div></section>
+    <section class="slide video-slide" data-task="03" aria-label="물류팀 1단계"><div class="video-layout"><div class="video-frame"><video muted playsinline preload="auto" poster="public/posters/03-logistics-phase-1.jpg"><source src="public/videos/03-logistics-phase-1.mp4" type="video/mp4"></video></div></div></section>
+    <section class="slide video-slide" data-task="03" aria-label="물류팀 2단계"><div class="video-layout"><div class="video-frame"><video muted playsinline preload="auto" poster="public/posters/03-logistics-phase-2.jpg"><source src="public/videos/03-logistics-phase-2.mp4" type="video/mp4"></video></div></div></section>
+    <section class="slide video-slide" data-task="06" aria-label="스케일업팀 1단계"><div class="video-layout"><div class="video-frame"><video muted playsinline preload="auto" poster="public/posters/06-scaleup-phase-1.jpg"><source src="public/videos/06-scaleup-phase-1.mp4" type="video/mp4"></video></div></div></section>
+    <section class="slide video-slide" data-task="06" aria-label="스케일업팀 2단계"><div class="video-layout"><div class="video-frame"><video muted playsinline preload="auto" poster="public/posters/06-scaleup-phase-2.jpg"><source src="public/videos/06-scaleup-phase-2.mp4" type="video/mp4"></video></div></div></section>
+    <section class="slide video-slide" data-task="08" aria-label="품질보증팀 1단계"><div class="video-layout"><div class="video-frame"><video muted playsinline preload="auto" poster="public/posters/08-quality-assurance-phase-1.jpg"><source src="public/videos/08-quality-assurance-phase-1.mp4" type="video/mp4"></video></div></div></section>
+    <section class="slide video-slide" data-task="08" aria-label="품질보증팀 2단계"><div class="video-layout"><div class="video-frame"><video muted playsinline preload="auto" poster="public/posters/08-quality-assurance-phase-2.jpg"><source src="public/videos/08-quality-assurance-phase-2.mp4" type="video/mp4"></video></div></div></section>
+    <section class="slide video-slide" data-task="08" aria-label="품질보증팀 3단계"><div class="video-layout"><div class="video-frame"><video muted playsinline preload="auto" poster="public/posters/08-quality-assurance-phase-3.jpg"><source src="public/videos/08-quality-assurance-phase-3.mp4" type="video/mp4"></video></div></div></section>
+    <section class="slide video-slide" data-task="11" aria-label="품질관리2팀 1단계"><div class="video-layout"><div class="video-frame"><video muted playsinline preload="auto" poster="public/posters/11-analysis-list-phase-1.jpg"><source src="public/videos/11-analysis-list-phase-1.mp4" type="video/mp4"></video></div></div></section>
+    <section class="slide video-slide" data-task="11" aria-label="품질관리2팀 2단계"><div class="video-layout"><div class="video-frame"><video muted playsinline preload="auto" poster="public/posters/11-analysis-list-phase-2.jpg"><source src="public/videos/11-analysis-list-phase-2.mp4" type="video/mp4"></video></div></div></section>
+    <section class="slide video-slide" data-task="19" aria-label="품질관리4팀 재시험 1단계"><div class="video-layout"><div class="video-frame"><video muted playsinline preload="auto" poster="public/posters/19-microbe-retest-phase-1.jpg"><source src="public/videos/19-microbe-retest-phase-1.mp4" type="video/mp4"></video></div></div></section>
+    <section class="slide video-slide" data-task="19" aria-label="품질관리4팀 재시험 2단계"><div class="video-layout"><div class="video-frame"><video muted playsinline preload="auto" poster="public/posters/19-microbe-retest-phase-2.jpg"><source src="public/videos/19-microbe-retest-phase-2.mp4" type="video/mp4"></video></div></div></section>
+    <section class="slide video-slide" data-task="19" aria-label="품질관리4팀 재시험 3단계"><div class="video-layout"><div class="video-frame"><video muted playsinline preload="auto" poster="public/posters/19-microbe-retest-phase-3.jpg"><source src="public/videos/19-microbe-retest-phase-3.mp4" type="video/mp4"></video></div></div></section>
+    <section class="slide video-slide" data-task="20" aria-label="품질관리4팀 미생물 자동화 1단계"><div class="video-layout"><div class="video-frame"><video muted playsinline preload="auto" poster="public/posters/20-microbe-automation-phase-1.jpg"><source src="public/videos/20-microbe-automation-phase-1.mp4" type="video/mp4"></video></div></div></section>
+    <section class="slide video-slide" data-task="20" aria-label="품질관리4팀 미생물 자동화 2단계"><div class="video-layout"><div class="video-frame"><video muted playsinline preload="auto" poster="public/posters/20-microbe-automation-phase-2.jpg"><source src="public/videos/20-microbe-automation-phase-2.mp4" type="video/mp4"></video></div></div></section>
+    <section class="slide video-slide" data-task="20" aria-label="품질관리4팀 미생물 자동화 3단계"><div class="video-layout"><div class="video-frame"><video muted playsinline preload="auto" poster="public/posters/20-microbe-automation-phase-3.jpg"><source src="public/videos/20-microbe-automation-phase-3.mp4" type="video/mp4"></video></div></div></section>
 
     <section class="slide" aria-label="마침">
       <div class="cover">
@@ -122,6 +177,17 @@
       </div>
     </section>
   </main>
+
+  <button class="source-toggle" id="source-toggle" type="button" aria-controls="source-drawer" aria-expanded="false" hidden>과제 원문</button>
+  <button class="source-backdrop" id="source-backdrop" type="button" aria-label="과제 원문 닫기"></button>
+  <aside class="source-drawer" id="source-drawer" aria-label="팀별 과제 원문" aria-hidden="true">
+    <div class="source-head">
+      <div><p class="source-kicker" id="source-kicker"></p><h2 class="source-title" id="source-title"></h2></div>
+      <button class="source-close" id="source-close" type="button" aria-label="닫기">×</button>
+    </div>
+    <div id="source-content"></div>
+    <p class="source-footnote">출처: 「[콜마홀딩스]26년 하반기 Open Lab_명단.xlsx」 과제기획서 원문 발췌 · 개인정보 제외</p>
+  </aside>
 
   <nav class="controls" aria-label="슬라이드 이동">
     <button class="nav-button" id="previous" type="button" aria-label="이전 슬라이드">←</button>
@@ -136,7 +202,77 @@
     const nextButton = document.querySelector('#next');
     const counter = document.querySelector('#counter');
     const deck = document.querySelector('#deck');
+    const sourceToggle = document.querySelector('#source-toggle');
+    const sourceBackdrop = document.querySelector('#source-backdrop');
+    const sourceDrawer = document.querySelector('#source-drawer');
+    const sourceClose = document.querySelector('#source-close');
+    const sourceKicker = document.querySelector('#source-kicker');
+    const sourceTitle = document.querySelector('#source-title');
+    const sourceContent = document.querySelector('#source-content');
     let currentSlide = 0;
+
+    const taskSources = {
+      '03': { team: '03 · 물류팀(부천)', title: '명세서 저장,분류,전달 프로세스 자동화를 통한 업무 효율화', sections: [
+        ['현재 업무 프로세스', '출고 예정인 완제품 출고 준비 후 → 완제품 출고 시 거래명세서 2장 프린트 (1장은 고객사 발송용, 1장은 보관용) → 출고 후 담당 영업PM에게 카톡 또는 메일로 거래명세서 공유'],
+        ['개발 프로세스', '1. 명세서 파일 생성 : 출고 업무 완료 후 사전에 지정된 공유 폴더에 저장\n2. 파일 정보 자동 확인 : 시스템이 지정 폴더에 새로 등록된 명세서 파일을 자동으로 인식, 명세서 내 고객사명을 기준으로 해당 거래처 확인\n3. 영업 담당자 자동 매칭 : 거래처별 영업 담당자 정보를 사전에 등록해 두고, 확인된 거래처와 담당자를 자동으로 매칭\n4. 명세서 자동 전달 : 매칭된 영업PM에게 명세서를 자동 전달 (메일 또는 팀즈)\n5. 전달완료 및 이력관리 : 명세서 전달 여부와 전달 일시, 담당자 등의 이력을 자동 기록\n6. 전달된 명세서 관리 : 명세서 관리를 위해 특정폴더에 시간순으로 저장']
+      ]},
+      '06': { team: '06 · 스케일업팀', title: '신제품 개발 프로세스 단계별 알람 자동화', sections: [
+        ['배경 혹은 고민/이슈사항', '이 때, 이전 단계에서 다음 단계로 넘어가면서 메일을 누락하거나, 회신을 누락했을 경우 다음 단계로 진행되어야 하지만 진행되지 못하는 경우가 있습니다.\n이러면 단순하게는 연락 누락, 신제품 개발 및 생산에 지연이 생기며, 이를 통해 고객사가 요청한 납기를 준수하지 못하는 경우가 발생할 수 있습니다.'],
+        ['개발 프로세스', '업무 일정 및 기한을 착각하거나 잊어버리는 것을 예방하기 위해 각 단계별 완료상태 또는 진행상태를 주기적으로 설정한 일정에 맞게 메일 또는 팀즈로 알람이 갈 수 있도록 하는 로직을 구성하고 싶습니다.'],
+        ['AI 활용방안', 'n8n을 통해 주기적으로 엑셀 데이터를 자동으로 읽어서 기존의 파일과 비교하여 변경사항이 발생하면 변경사항에 대한 알람이 자동으로 발송.\n단계 완료 예정일자 30일, 7일, 1일전 각각 알람 자동 발송. 엑셀 시트를 활용하여 신제품 개발 진행상황 및 진행률 확인.']
+      ]},
+      '08': { team: '08 · 품질보증팀', title: '원료명 및 시험규격 변경관리 프로세스 자동화', sections: [
+        ['개발 프로세스 · 시험규격 변경관리', '1) 요청 접수\n- TEAMS 내 시험규격 등록 요청을 Form을 통해 자재코드 및 요청사항을 제출\n2) 요청사항 자동 관리\n- Form 제출 시 요청 정보가 Microsoft Lists에 자동으로 등록되도록 구성하여 별도의 수기 취합 없이 요청 건을 일괄 관리 및 제출되면 담당자에게 TEAMS 로 알림 전송\n3) 중복 요청 확인\n- 동일 일자 내 동일 자재코드의 요청 여부를 자동으로 확인하여 중복 요청을 방지\n4) 규격 등록 진행\n- 접수된 요청 건을 확인 후 LIMS에서 시험규격 등록을 진행하고 진행상태를 Lists에 업데이트함\n5) 완료 안내\n- 규격 등록 완료 시 진행상태를 \'완료\' 로 변경하여, 요청자에게 완료 알림이 자동으로 전달되도록 함'],
+        ['개발 프로세스 · 원료명 변경 관리', '- LIMS 벌크 제조 이력 리스트와 QMS 벌크 표준서 작성 완료 리스트를 OneDrive에 수동으로 저장한 후, n8n을 통해 두 자료를 자동으로 취합하고 벌크코드 기준 중복값 삭제\n- 정리된 리스트는 OneDrive 내 원료명 변경 이력 관리 엑셀 파일에 자동으로 업데이트하여 제품표준서 개정 시 리스트 참고']
+      ]},
+      '11': { team: '11 · 품질관리2팀', title: 'AI 기반 분석 리스트 작성을 통한 누락 방지 시스템 구축', sections: [
+        ['현재 업무 프로세스', 'Ex) 충전품 및 로트 의뢰 내역 확인→고객사별 시험 주기 수기 확인→시험 항목별 시험 이력 조회→중복 로트 수작업 제거→시험 대상 품목을 시험자가 개별 선정-선정 결과 토대로 분석 리스트 작성→분석 진행→분석 리스트에 결과 관리→림스 입력'],
+        ['개발 프로세스', '1. 샘플 리스트 업로드\n결산 자료를 통해 각 공장에서 생산된 생산된 제품의 샘플 리스트 작성\n*작성 후, 실제 받은 샘플과 리스트 비교하여 누락 샘플 확인\nAI 또는 문서 인식 기능을 활용하여 엑셀 입력된 정보를 자동으로 추출하고, 동일한 품목이나 로트가 중복 등록되지 않도록 확인합니다.\n2. 제품별 시험 항목 및 분석 주기별 시험 리스트 분류\n제품 정보와 기존에 등록된 시험 기준 및 분석 이력을 바탕으로 샘플별 시험 항목에 따라 자동 리스트 작성\nAI는 제품명, 품목 유형, 로트 정보 및 과거 분석 이력을 종합하여 분석 대상 여부와 선정 사유가 자동으로 표시됩니다.']
+      ]},
+      '19': { team: '19 · 품질관리4팀', title: '미생물 시험 데이터 통합 및 재시험 일정·결과 스마트 관리 시스템', sections: [
+        ['현재 업무 프로세스', '-미생물 시험 리스트 3종류 엑셀 파일을 각각 열어 판정일 계산 후 \'판정리스트\' 엑셀 작성\n-미생물 검출 시 해당 품목 조회 및 검출 내용 메일 작성·공유 (미생물검출메일)\n-검출 품목 재시험 수행 후 적합/부적합 판정에 따른 메일 작성·공유 (미생물재시험결과메일)\n-판정리스트 내 검출 품목에 \'미생물검출\' 표시\n-타 부서에서 재시험 판정일 문의 시 지류 기록서를 확인하여 개별 답변'],
+        ['개발 프로세스', '-3종 엑셀 자동 병합 및 판정일 계산: 3종 엑셀 파일 업로드 시, 시험일 기반 판정일을 자동 계산하여 하나의 \'판정리스트\' 파일로 자동 집계\n-챗봇 기반 검출 품목 식별 및 마킹: 챗봇을 통해 시험일자/번호 기준 품목 정보 조회 및 엑셀 셀 내 \'미생물 검출\' 멘트와 \'재시험 판정일\' 자동 입력\n-메일 템플릿 자동 발송: 검출 품목 데이터를 기반으로 정해진 양식에 맞춰 검출 알림 메일 및 재시험 결과(적합/부적합) 메일 자동 생성 및 발송\n-타 부서 문의 자동 응대: 챗봇이 판정리스트 데이터를 기반으로 재시험 판정일을 자동 검색하고, Teams를 통해 관련 부서에 즉시 공유']
+      ]},
+      '20': { team: '20 · 품질관리4팀', title: 'n8n통한 미생물 업무 자동화', sections: [
+        ['현재 업무 프로세스', '1. 판정 AI 어시스트\n2. RAW DATA 업로드 자동화\n3. 배지사용일지 자동화 AI\n4. AI기반 미생물검출률 통계 자동화 추진 계획'],
+        ['개발 프로세스 · RAW DATA 업로드 자동화', 'N8N 기반으로 시험 데이터 이미지를 자동 정리하는 시스템입니다.\n담당자가 시험결과 이미지를 촬영해서 지정된 폴더에 올리면, 시스템이 이를 자동으로 감지하면서 작업이 시작됩니다. 이후 AI가 이미지 안의 시험명, 시료명, 시험 일자 같은 정보를 자동으로 읽어내고, 이 정보를 바탕으로 파일명을 자동으로 바꿔줍니다. 이어서 해당 시험 일자에 맞는 폴더가 있는지 확인하고 없으면 새로 만든 뒤, 파일을 그 폴더로 옮겨 분류까지 마칩니다. 모든 처리가 끝나면 담당자에게 완료 알림을 보내줍니다.\n한마디로 정리하면 \'시험 데이터 이미지 정리 및 폴더 자동 분류\' 과제입니다.'],
+        ['개발 프로세스 · 배지사용일지 자동화 AI', '개발하고 싶은 과제는 AI 기반 배지사용일지 자동 작성 및 검산 시스템입니다. 배지 입고량, 조제량, 사용량, 시험일자 등의 정보를 입력하거나 기존 자료에서 불러오면, 시스템이 배지별 잔여량을 자동으로 계산하고 배지사용일지에 기입하도록 하는 방식입니다.']
+      ]}
+    };
+
+    const closeSource = () => {
+      sourceDrawer.classList.remove('open');
+      sourceBackdrop.classList.remove('open');
+      sourceDrawer.setAttribute('aria-hidden', 'true');
+      sourceToggle.setAttribute('aria-expanded', 'false');
+    };
+
+    const openSource = () => {
+      sourceDrawer.classList.add('open');
+      sourceBackdrop.classList.add('open');
+      sourceDrawer.setAttribute('aria-hidden', 'false');
+      sourceToggle.setAttribute('aria-expanded', 'true');
+      sourceClose.focus();
+    };
+
+    const updateSource = (taskId) => {
+      const task = taskSources[taskId];
+      sourceToggle.hidden = !task;
+      closeSource();
+      if (!task) return;
+      sourceKicker.textContent = task.team;
+      sourceTitle.textContent = task.title;
+      sourceContent.replaceChildren(...task.sections.map(([heading, body]) => {
+        const section = document.createElement('section');
+        section.className = 'source-section';
+        const title = document.createElement('h3');
+        title.textContent = heading;
+        const copy = document.createElement('p');
+        copy.textContent = body;
+        section.append(title, copy);
+        return section;
+      }));
+    };
 
     const showSlide = (index) => {
       const nextIndex = Math.max(0, Math.min(index, slides.length - 1));
@@ -163,6 +299,7 @@
       nextButton.disabled = currentSlide === slides.length - 1;
       counter.textContent = `${currentSlide + 1} / ${slides.length}`;
       history.replaceState(null, '', `#${currentSlide + 1}`);
+      updateSource(slides[currentSlide].dataset.task);
     };
 
     const nextSlide = () => showSlide(currentSlide + 1);
@@ -174,7 +311,16 @@
     });
     nextButton.addEventListener('click', nextSlide);
     previousButton.addEventListener('click', previousSlide);
+    sourceToggle.addEventListener('click', openSource);
+    sourceClose.addEventListener('click', closeSource);
+    sourceBackdrop.addEventListener('click', closeSource);
     document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && sourceDrawer.classList.contains('open')) {
+        closeSource();
+        sourceToggle.focus();
+        return;
+      }
+      if (sourceDrawer.classList.contains('open')) return;
       if (['ArrowRight', 'PageDown', 'Enter', ' '].includes(event.key)) {
         event.preventDefault();
         nextSlide();
